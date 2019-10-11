@@ -1,0 +1,4 @@
+#Fri Oct 11 23:41:45 CEST 2019
+base.0=/home/igor-emlid/Documents/Flutter/akinotor/build/app/intermediates/transforms/dexMerger/debug/0
+path.0=classes.dex
+renamed.0=classes.dex
