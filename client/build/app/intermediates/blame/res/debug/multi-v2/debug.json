@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/home/igor-emlid/Documents/Flutter/akinotor/build/app/intermediates/res/merged/debug/values_values.arsc.flat",
+            "outputFile": "/home/igor-emlid/Documents/Flutter/akinotor/client/build/app/intermediates/res/merged/debug/values_values.arsc.flat",
             "map": [
                 {
-                    "source": "/home/igor-emlid/Documents/Flutter/akinotor/android/app/src/main/res/values/styles.xml",
+                    "source": "/home/igor-emlid/Documents/Flutter/akinotor/client/android/app/src/main/res/values/styles.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

@@ -55,21 +55,48 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      backgroundColor: Colors.blue,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
               'Good day',
+              style: TextStyle(color: Colors.white, fontSize: 28.0),
+            ),
+            Padding(
+              padding: EdgeInsets.all(14.0),
             ),
             Text(
               'Are you ready?',
-              style: Theme.of(context).textTheme.display1,
+              style: TextStyle(color: Colors.white, fontSize: 18.0),
             ),
-            MaterialButton(
+            Padding(
+              padding: EdgeInsets.all(8.0),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 30.0, right: 30.0),
+              child: ButtonTheme(
+                minWidth: 250.0,
+                child: RaisedButton(
+                  shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(28.0),
+                      side: BorderSide(color: Colors.green)),
+                  onPressed: () {},
+                  color: Colors.green,
+                  textColor: Colors.white,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text("Pick up the trip", style: TextStyle(fontSize: 18)),
+                      Padding(
+                        padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                      ),
+                      Icon(Icons.airplanemode_active, color: Colors.white,)
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         ),
