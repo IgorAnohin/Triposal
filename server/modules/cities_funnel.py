@@ -2,6 +2,7 @@ import random
 from .cities_collection import CitiesCollection
 from .images_getter import ImageGetterCached
 
+
 def shuffle_copy(lst):
     random.shuffle(lst.copy())
     return lst
@@ -40,14 +41,21 @@ class CityQuestion(object):
 
 
 class CitiesFunnel:
+    def init(self):
+        self.data = self.cities_collection.data.copy()
+        self.static_features = shuffle_copy(self.cities_collection.get_features())
+        self.feature_scores = {}
+        self.current_static_feature_idx = 0
+
     def __init__(self, img_getter):
         self.cities_collection = CitiesCollection()
         self.img_getter = img_getter
         self.cities_set = set(self.cities_collection.get_cities())
-        self.data = self.cities_collection.data
-        self.static_features = shuffle_copy(self.cities_collection.get_features())
-        self.feature_scores = {}
-        self.current_static_feature_idx = 0
+        self.data = None
+        self.static_features = None
+        self.feature_scores = None
+        self.current_static_feature_idx = None
+        self.init()
 
     def get_cities_pair(self):
         return random.sample(self.cities_collection.get_cities(), 2)
@@ -96,3 +104,6 @@ class CitiesFunnel:
         if len(self.data) <= min_valuable_count:
             return self.find_best(min_valuable_count)
         return None
+
+    def reset(self):
+        self.init()

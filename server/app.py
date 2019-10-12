@@ -1,6 +1,7 @@
 import configparser
 
 from flask import Flask, jsonify, request
+from datetime import datetime
 
 from modules.images_getter import ImageGetterCached
 from modules.price_finder import PriceFinder
@@ -18,11 +19,26 @@ funnel = CitiesFunnel(img_getter)
 price_finder = PriceFinder(config['skyscanner.api']['api_key'])
 
 
+def choose_greeting():
+    # Where to next?
+    today = datetime.now().strftime("%H:%M")
+    if today >= '05:00' and today < '12:00':
+        return 'Good morning!'
+    elif today >= '12:00' and today < '18:00':
+        return 'Good afternoon!'
+    return 'Good evening!'
+
+
 def merge_with_flights(cities):
     flights = [price_finder.get_price(city, max_results=1) for city in cities]
     min_prices = [flight['MinPrice'] for flight in flights]
     urls = [img_getter.get(city, 'sightseeing', count=1) for city in cities]
     return [{'city': city, 'min_price': min_price, 'url': url} for (city, min_price, url) in zip(min_prices, min_prices, urls)]
+
+
+@app.route('/greeting', methods=['GET'])
+def get_greeting():
+    return jsonify({'greeting': choose_greeting()})
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -42,6 +58,12 @@ def main():
         if resulted_cities is not None:
             json['flights'] = merge_with_flights(resulted_cities)
         return jsonify(json)
+
+
+@app.route('/reset', method=['POST'])
+def reset():
+    funnel.reset()
+    return jsonify({'status': 'confirmed'})
 
 
 @app.route('/final', methods=['GET'])
