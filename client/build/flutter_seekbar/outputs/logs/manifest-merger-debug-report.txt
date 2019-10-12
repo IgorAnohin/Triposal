@@ -1,0 +1,19 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /home/igor-emlid/Documents/Flutter/flutter/.pub-cache/git/flutter_seekbar-96e16c007f0d9ce02aff90aa8a1a3667ab933dd7/android/src/main/AndroidManifest.xml:1:1-3:12
+INJECTED from /home/igor-emlid/Documents/Flutter/flutter/.pub-cache/git/flutter_seekbar-96e16c007f0d9ce02aff90aa8a1a3667ab933dd7/android/src/main/AndroidManifest.xml:1:1-3:12
+INJECTED from /home/igor-emlid/Documents/Flutter/flutter/.pub-cache/git/flutter_seekbar-96e16c007f0d9ce02aff90aa8a1a3667ab933dd7/android/src/main/AndroidManifest.xml:1:1-3:12
+	package
+		ADDED from /home/igor-emlid/Documents/Flutter/flutter/.pub-cache/git/flutter_seekbar-96e16c007f0d9ce02aff90aa8a1a3667ab933dd7/android/src/main/AndroidManifest.xml:2:3-39
+		INJECTED from /home/igor-emlid/Documents/Flutter/flutter/.pub-cache/git/flutter_seekbar-96e16c007f0d9ce02aff90aa8a1a3667ab933dd7/android/src/main/AndroidManifest.xml
+		INJECTED from /home/igor-emlid/Documents/Flutter/flutter/.pub-cache/git/flutter_seekbar-96e16c007f0d9ce02aff90aa8a1a3667ab933dd7/android/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /home/igor-emlid/Documents/Flutter/flutter/.pub-cache/git/flutter_seekbar-96e16c007f0d9ce02aff90aa8a1a3667ab933dd7/android/src/main/AndroidManifest.xml:1:11-69
+uses-sdk
+INJECTED from /home/igor-emlid/Documents/Flutter/flutter/.pub-cache/git/flutter_seekbar-96e16c007f0d9ce02aff90aa8a1a3667ab933dd7/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /home/igor-emlid/Documents/Flutter/flutter/.pub-cache/git/flutter_seekbar-96e16c007f0d9ce02aff90aa8a1a3667ab933dd7/android/src/main/AndroidManifest.xml
+INJECTED from /home/igor-emlid/Documents/Flutter/flutter/.pub-cache/git/flutter_seekbar-96e16c007f0d9ce02aff90aa8a1a3667ab933dd7/android/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /home/igor-emlid/Documents/Flutter/flutter/.pub-cache/git/flutter_seekbar-96e16c007f0d9ce02aff90aa8a1a3667ab933dd7/android/src/main/AndroidManifest.xml
+		ADDED from /home/igor-emlid/Documents/Flutter/flutter/.pub-cache/git/flutter_seekbar-96e16c007f0d9ce02aff90aa8a1a3667ab933dd7/android/src/main/AndroidManifest.xml
+		INJECTED from /home/igor-emlid/Documents/Flutter/flutter/.pub-cache/git/flutter_seekbar-96e16c007f0d9ce02aff90aa8a1a3667ab933dd7/android/src/main/AndroidManifest.xml

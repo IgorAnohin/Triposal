@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import './game.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -44,14 +46,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,7 +76,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   shape: new RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(28.0),
                       side: BorderSide(color: Colors.green)),
-                  onPressed: () {},
+                  onPressed: () {
+                    print("PICK UP TRIP WAS PUSHED");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Game()),
+                    );
+                  },
                   color: Colors.green,
                   textColor: Colors.white,
                   child: Row(

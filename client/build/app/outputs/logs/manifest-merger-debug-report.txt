@@ -5,6 +5,7 @@ INJECTED from /home/igor-emlid/Documents/Flutter/akinotor/client/android/app/src
 INJECTED from /home/igor-emlid/Documents/Flutter/akinotor/client/android/app/src/main/AndroidManifest.xml:1:1-33:12
 INJECTED from /home/igor-emlid/Documents/Flutter/akinotor/client/android/app/src/main/AndroidManifest.xml:1:1-33:12
 MERGED from /home/igor-emlid/Documents/Flutter/akinotor/client/android/app/src/main/AndroidManifest.xml:1:1-33:12
+MERGED from [:flutter_seekbar] /home/igor-emlid/Documents/Flutter/akinotor/client/build/flutter_seekbar/intermediates/merged_manifests/debug/processDebugManifest/merged/AndroidManifest.xml:2:1-7:12
 INJECTED from /home/igor-emlid/Documents/Flutter/akinotor/client/android/app/src/debug/AndroidManifest.xml:1:1-7:12
 INJECTED from /home/igor-emlid/Documents/Flutter/akinotor/client/android/app/src/debug/AndroidManifest.xml:1:1-7:12
 INJECTED from /home/igor-emlid/Documents/Flutter/akinotor/client/android/app/src/debug/AndroidManifest.xml:1:1-7:12
@@ -64,6 +65,8 @@ uses-sdk
 INJECTED from /home/igor-emlid/Documents/Flutter/akinotor/client/android/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /home/igor-emlid/Documents/Flutter/akinotor/client/android/app/src/main/AndroidManifest.xml
 INJECTED from /home/igor-emlid/Documents/Flutter/akinotor/client/android/app/src/main/AndroidManifest.xml
+MERGED from [:flutter_seekbar] /home/igor-emlid/Documents/Flutter/akinotor/client/build/flutter_seekbar/intermediates/merged_manifests/debug/processDebugManifest/merged/AndroidManifest.xml:5:5-44
+MERGED from [:flutter_seekbar] /home/igor-emlid/Documents/Flutter/akinotor/client/build/flutter_seekbar/intermediates/merged_manifests/debug/processDebugManifest/merged/AndroidManifest.xml:5:5-44
 INJECTED from /home/igor-emlid/Documents/Flutter/akinotor/client/android/app/src/debug/AndroidManifest.xml
 INJECTED from /home/igor-emlid/Documents/Flutter/akinotor/client/android/app/src/debug/AndroidManifest.xml
 	android:targetSdkVersion
