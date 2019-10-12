@@ -16,12 +16,14 @@ class Question(object):
         self.max = max_
 
     def to_json(self):
-        return {
+        json = {
             'question_text': self.question_text,
             'question_perk': self.question_perk,
             'min': self.min,
             'max': self.max
         }
+        print('JSON\n', json)
+        return json
 
 
 class CityQuestion(object):
@@ -32,12 +34,14 @@ class CityQuestion(object):
         self.city2 = url2
 
     def to_json(self):
-        return {
+        json = {
             'city1_name': self.city1_name,
             'city2_name': self.city2_name,
             'city1': self.city1,
             'city2': self.city2
         }
+        print('JSON\n', json)
+        return json
 
 
 class CitiesFunnel:

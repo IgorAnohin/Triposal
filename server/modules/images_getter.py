@@ -19,9 +19,6 @@ class ImageGetter:
             'imgType': 'photo'  # 'huge|icon|large|medium|small|xlarge|xxlarge'
         }
         gis.search(search_params=search_params)
-
-        # return [url for url in gis._google_custom_search.search(search_params, False)]
-
         return [image.url for image in gis.results()]
 
 
@@ -91,7 +88,7 @@ class ImageGetterLocal:
     def get_random_url(self, key_word, city):
         df = self.dfs[key_word]
         city_data = df[df['city'] == city].iloc[0]
-        return random.sample(city_data['urls'].split(' '), 1)
+        return random.sample(city_data['urls'].split(' '), 1)[0]
 
     def get_random(self):
         key_word = self.get_random_key_word()
