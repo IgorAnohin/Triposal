@@ -68,7 +68,7 @@ class CitiesFunnel:
         return result
 
     def _get_next_dynamic_feature(self):
-        return self.get_cities_pair()
+        return self.img_getter.get_random()
 
     def get_next_question(self):
         if bool(random.getrandbits(1)):
@@ -76,8 +76,7 @@ class CitiesFunnel:
             min_, max_ = self.cities_collection.get_range(feature)
             return Question(self.cities_collection.get_question(feature), feature, min_, max_)
         else:
-            city1, city2 = self._get_next_dynamic_feature()
-            url1, url2 = self.img_getter.get_random_imgs(city1, city2)
+            city1, city2, url1, url2 = self._get_next_dynamic_feature()
             return CityQuestion(city1, city2, url1, url2)
 
     def set_rating(self, feature, rating):
