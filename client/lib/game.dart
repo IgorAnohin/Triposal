@@ -67,6 +67,8 @@ class _GameState extends State<Game>{
   Widget createQuestion(data, BuildContext context) {
     if (data["max"] != null)
       return seekBarQuestion(data, context);
+    if (data["city1"] != null)
+      return imagesQuestions(data, context);
     print(data);
   }
 
@@ -138,6 +140,67 @@ class _GameState extends State<Game>{
         ),
       ],
     );
+  }
+
+  Widget imagesQuestions(data, BuildContext context) {
+    var _image1 = data["city1"].toString();
+    var _image2 = data["city2"].toString();
+    return Column (
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 20.0),
+          child: AutoSizeText(
+            "Which view do you prefer?",
+            style: TextStyle(fontSize: 20),
+            maxLines: 2,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 10.0, right: 10.0),
+          child: GestureDetector(
+            onTap: () {
+              sendImagePost(data["city1_name"].toString());
+              Route route = MaterialPageRoute(builder: (context) => Game());
+              Navigator.pushReplacement(context, route);
+            },
+            child: Image.network(
+              _image1,
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 10.0, right: 10.0),
+          child: GestureDetector(
+            onTap: () {
+              sendImagePost(data["city2_name"].toString());
+              Route route = MaterialPageRoute(builder: (context) => Game());
+              Navigator.pushReplacement(context, route);
+            },
+            child: Image.network(
+              _image2,
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 10.0, right: 10.0, bottom: 20.0),
+        ),
+      ],
+    );
+  }
+
+  void sendImagePost(String city) {
+    var map = new Map<String, dynamic>();
+    map["city"] = city;
+    http.post('http://31571392.ngrok.io/', body: map).then((
+        http.Response response) {
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error while fetching data");
+      }
+      print("AWESOME");
+    });
   }
 
   void sendPost(perk, double value) {
