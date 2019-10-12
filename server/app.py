@@ -19,8 +19,10 @@ price_finder = PriceFinder(config['skyscanner.api']['api_key'])
 
 
 def merge_with_flights(cities):
-    min_prices = [price_finder.get_price(city, max_results=1) for city in cities]
-    return [{'city': city, 'min_price': min_price} for city, min_price in zip(min_prices, min_prices)]
+    flights = [price_finder.get_price(city, max_results=1) for city in cities]
+    min_prices = [flight['MinPrice'] for flight in flights]
+    urls = [img_getter.get(city, 'sightseeing', count=1) for city in cities]
+    return [{'city': city, 'min_price': min_price, 'url': url} for (city, min_price, url) in zip(min_prices, min_prices, urls)]
 
 
 @app.route('/', methods=['GET', 'POST'])
