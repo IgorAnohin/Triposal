@@ -23,7 +23,6 @@ class CitiesCollection:
     def _get_old_new_features_mapping():
         return {
             'female_friendly': 'female friendly',
-            'freedom_of_speech': 'freedom of speech',
             'friendly_to_foreigners': 'friendly to foreigners',
             'fun': 'fun',
             'happiness': 'happiness',
@@ -38,6 +37,26 @@ class CitiesCollection:
             'startup_score': 'startup score',
             'traffic_safety': 'traffic safety',
             'walkability': 'walkability'
+        }
+
+    @staticmethod
+    def _get_features_questions_mapping():
+        return {
+            'female friendly': 'How family friendly should the city be?',
+            'friendly to foreigners': 'How friendly the city for foreigners?',
+            'fun': 'How fun should be the city?',
+            'happiness': 'Happiness level of the city?',
+            'healthcare': 'Healthcare level in the city?',
+            'lgbt friendly': 'Should the city be LGBT friendly?',
+            'nightlife': 'Nightlife activity in the city.',
+            'peace': 'How peaceful is the city required to be?',
+            'quality of life': 'How good is the city for life?',
+            'racial tolerance': 'Tolerance level towards non-local races?',
+            'religious government': 'How religious should be the government?',
+            'safety': 'Required safety level?',
+            'startup score': 'How good is the city for developing a startup?',
+            'traffic safety': 'How safe is the traffic?',
+            'walkability': 'How good is the city for walks?'
         }
 
     def get_main_features(self):
@@ -57,6 +76,9 @@ class CitiesCollection:
     def get_features(self):
         return self._features
 
+    def get_question(self, feature):
+        return self._features_questions_mapping.get(feature)
+
     def get_range(self, feature):
         return self._features_ranges_mapping.get(feature, (1, 5))
 
@@ -66,5 +88,6 @@ class CitiesCollection:
 
         self._key_features = self.get_main_features()
         self._features_ranges_mapping = self._get_features_ranges_mapping()
+        self._features_questions_mapping = self._get_features_questions_mapping()
 
         self.data = self._load_table(self.DEFAULT_FP)
