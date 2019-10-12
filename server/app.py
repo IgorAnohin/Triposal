@@ -4,6 +4,8 @@ from flask import Flask, jsonify, request
 import configparser
 from modules.cities_collection import CitiesCollection
 from modules.images_getter import ImageGetterCached
+from modules.get_score import ScoreCalculator
+from modules.price_finder import PriceFinder
 
 app = Flask(__name__)
 
@@ -74,7 +76,11 @@ def next_question():
 
 @app.route('/final', methods=['GET'])
 def final_result():
-    return 'kek'
+    cities = ScoreCalculator(city_perks).get_city_recommendation()
+    flights = []
+    for city in cities:
+        flights.append(PriceFinder().get_price(city,max_results=1))
+    return flights
 
 
 @app.route('/image')
