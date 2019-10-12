@@ -73,7 +73,7 @@ def next_question():
 
 
 @app.route('/final', methods=['GET'])
-def temporary():
+def final_result():
     return 'kek'
 
 
