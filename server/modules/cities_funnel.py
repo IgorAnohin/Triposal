@@ -17,13 +17,15 @@ class Question(object):
         self.image = image_
 
     def to_json(self):
-        return {
+        json = {
             'question_text': self.question_text,
             'question_perk': self.question_perk,
             'min': self.min,
             'max': self.max,
             'image': self.image
         }
+        print('JSON\n', json)
+        return json
 
 
 class CityQuestion(object):
@@ -34,12 +36,14 @@ class CityQuestion(object):
         self.city2 = url2
 
     def to_json(self):
-        return {
+        json = {
             'city1_name': self.city1_name,
             'city2_name': self.city2_name,
             'city1': self.city1,
             'city2': self.city2
         }
+        print('JSON\n', json)
+        return json
 
 
 class CitiesFunnel:
@@ -70,7 +74,7 @@ class CitiesFunnel:
         return result
 
     def _get_next_dynamic_feature(self):
-        return self.get_cities_pair()
+        return self.img_getter.get_random()
 
     def get_next_question(self):
         if bool(random.getrandbits(1)):
@@ -78,8 +82,7 @@ class CitiesFunnel:
             min_, max_ = self.cities_collection.get_range(feature)
             return Question(self.cities_collection.get_question(feature), feature, min_, max_, self.cities_collection.get_image(feature))
         else:
-            city1, city2 = self._get_next_dynamic_feature()
-            url1, url2 = self.img_getter.get_random_imgs(city1, city2)
+            city1, city2, url1, url2 = self._get_next_dynamic_feature()
             return CityQuestion(city1, city2, url1, url2)
 
     def set_rating(self, feature, rating):
