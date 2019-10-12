@@ -3,7 +3,7 @@ import numpy as np
 from .cities_collection import CitiesCollection
 
 
-class ScoreCalculator():
+class ScoreCalculator:
     def __init__(self, answers):
         self.cities_collection = CitiesCollection()
         self.answers = answers
@@ -16,8 +16,8 @@ class ScoreCalculator():
                 try:
                     self.scores[index] += abs(
                         int(row[self.cities_collection._old_new_features_mapping[key]]) - int(value))
-                    print(self.scores[index], int(row[self.cities_collection._old_new_features_mapping[key]]),
-                          int(value))
+                    # print(self.scores[index], int(row[self.cities_collection._old_new_features_mapping[key]]),
+                    #     int(value))
                 except ValueError as e:
                     self.scores[index] += int(value)
 
@@ -25,12 +25,12 @@ class ScoreCalculator():
         self.scores.reverse()
         cities = np.argpartition(
             np.array(self.scores), -1 * n_cities)[-1 * n_cities:]
-        print(self.scores)
+        # print(self.scores)
         cities = np.array(self.cities_collection.get_cities())[cities]
 
-        print(cities)
+        # print(cities)
         return cities
 
-        cities = np.array(self.cities_collection.get_cities())[cities]
+        # cities = np.array(self.cities_collection.get_cities())[cities]
 
-        print(cities)
+        # print(cities)

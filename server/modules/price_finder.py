@@ -21,10 +21,10 @@ class PriceFinder:
         response = requests.request(
             "GET", url, data=payload, headers=headers, params=querystring)
 
-        if response.ok:
-            data = response.json()["Places"][0]
+        if response.ok and len(response.json()['Places']) > 0:
+            data = response.json()['Places'][0]
             print("price_finder:get_place_info: Got city name",
-                  data.get("PlaceName", "NONE"))
+                  data.get('PlaceName', 'NONE'))
             return data
         print("ERROR:price_finder:get_place_info: No place found for query", city_name)
         return None

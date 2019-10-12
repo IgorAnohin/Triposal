@@ -65,8 +65,9 @@ votes = {}
 
 
 def increase_city_score(local_request):
-    city_name = request.args.get('city_key')
+    city_name = local_request.args.get('city_key')
     votes[city_name] += 1
+    print('Increasing city ' + city_name + ' value')
     return jsonify({'status': 'confirmed'})
 
 
@@ -113,20 +114,11 @@ def final_result():
     flights = []
     config = configparser.ConfigParser()
     config.read(CONFIG_FP)
+
     for city in cities:
         flights.append(PriceFinder(config['skyscanner.api']['api_key']).get_price(city, max_results=1))
     return jsonify(flights)
 
 
-@app.route('/image')
-def test():
-    config = configparser.ConfigParser()
-    config.read(CONFIG_FP)
-
-    img_getter = ImageGetterCached(config['google.api']['developer_key'], config['google.api']['cx'])
-    img1, img2 = img_getter.get_random_imgs("France", "Russia")
-
-
 if __name__ == '__main__':
-    # app.run()
-    test()
+    app.run()
