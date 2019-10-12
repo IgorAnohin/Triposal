@@ -58,7 +58,7 @@ class CitiesCollection:
         return self._features
 
     def get_range(self, feature):
-        return self._features_ranges_mapping.get(feature, (0, 5))
+        return self._features_ranges_mapping.get(feature, (1, 5))
 
     def __init__(self):
         self._old_new_features_mapping = self._get_old_new_features_mapping()
