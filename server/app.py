@@ -10,66 +10,48 @@ app = Flask(__name__)
 CONFIG_FP = 'config.conf'
 
 questions = [
-    {'question_text': 'is internet speed important', 'question_perk': 'female_friendly', 'min': 0, 'max': 5},
-            'happiness': 'happiness',
-            'healthcare': 'healthcare',
-            'lgbt_friendly': 'lgbt friendly',
-            'nightlife': 'nightlife',
-            'peace': 'peace',
-            'quality_of_life': 'quality of life',
-            'racial_tolerance': 'racial tolerance',
-            'religious_government': 'religious government',
-            'safety': 'safety',
-            'startup_score': 'startup score',
-            'traffic_safety': 'traffic safety',
-            'walkability': 'walkability'
-    {'question_text': 'question text', 'question_perk': 'fun', 'min': 0, 'max': 5},
-    {'question_text': 'question text', 'question_perk': 'affordable_prices', 'min': 0, 'max': 5},
-    {'question_text': 'question text', 'question_perk': 'entertainment_variety', 'min': 0, 'max': 5},
-    {'question_text': 'question text', 'question_perk': 'air_quality', 'min': 0, 'max': 6},
-    {'question_text': 'question text', 'question_perk': 'spacious', 'min': 0, 'max': 5},
-    {'question_text': 'question text', 'question_perk': 'business_center', 'min': 0, 'max': 5},
-    {'question_text': 'question text', 'question_perk': 'good_education', 'min': 0, 'max': 6},
-    {'question_text': 'question text', 'question_perk': 'safe_roads', 'min': 0, 'max': 6},
-    {'question_text': 'question text', 'question_perk': 'freedom_of_speech', 'min': 0, 'max': 6},
-    {'question_text': 'question text', 'question_perk': 'democratic', 'min': 0, 'max': 5},
-    {'question_text': 'question text', 'question_perk': 'good_english', 'min': 0, 'max': 6},
-    {'question_text': 'question text', 'question_perk': 'safe_for_women', 'min': 0, 'max': 6},
-    {'question_text': 'question text', 'question_perk': 'avoid_humidity', 'min': 0, 'max': 5},
-    {'question_text': 'question text', 'question_perk': 'winter_temperature', 'min': 0, 'max': 5},
-    {'question_text': 'question text', 'question_perk': 'summer_temperature', 'min': 0, 'max': 6},
-    {'question_text': 'question text', 'question_perk': 'healthcare', 'min': 0, 'max': 6},
-    {'question_text': 'question text', 'question_perk': 'lgbt_tolerance', 'min': 0, 'max': 6},
-    {'question_text': 'question text', 'question_perk': 'less_smokers', 'min': 0, 'max': 6}]
+    {'question_text': 'How family friendly should the city be?', 'question_perk': 'female_friendly', 'min': 0, 'max': 5},
+    {'question_text': 'How fun should be the city?', 'question_perk': 'fun', 'min': 0, 'max': 5},
+    {'question_text': 'Happiness level of the city?', 'question_perk': 'happiness', 'min': 0, 'max': 5},
+    {'question_text': 'Healthcare level in the city?', 'question_perk': 'healthcare', 'min': 0, 'max': 5},
+    {'question_text': 'Should the city be LGBT friendly?', 'question_perk': 'lgbt_friendly', 'min': 0, 'max': 5},
+    {'question_text': 'Nightlife activity in the city.', 'question_perk': 'nightlife', 'min': 0, 'max': 5},
+    {'question_text': 'How peaceful is the city required to be?', 'question_perk': 'peace', 'min': 0, 'max': 5},
+    {'question_text': 'Tolerance level towards non-local races?', 'question_perk': 'racial_tolerance', 'min': 0, 'max': 5},
+    {'question_text': 'How religious should be the government?', 'question_perk': 'religious_government', 'min': 0, 'max': 5},
+    {'question_text': 'Required safety level?', 'question_perk': 'safety', 'min': 0, 'max': 5},
+    {'question_text': 'How good is the city for developing a startup?', 'question_perk': 'startup_score', 'min': 0, 'max': 5},
+    {'question_text': 'How safe is the traffic?', 'question_perk': 'traffic_safety', 'min': 0, 'max': 5},
+    {'question_text': 'How good is the city for walks?', 'question_perk': 'walkability', 'min': 0, 'max': 5}]
 
-city_perks = {'internet_speed': 0,
-              'overall_safety': 0,
-              'affordable_prices': 0,
-              'entertainment_variety': 0,
-              'air_quality': 0,
-              'spacious': 0,
-              'business_center': 0,
-              'good_education': 0,
-              'safe_roads': 0,
-              'freedom_of_speech': 0,
-              'democratic': 0,
-              'good_english': 0,
-              'safe_for_women': 0,
-              'avoid_humidity': 0,
-              'winter_temperature': 0,
-              'summer_temperature': 0,
+city_perks = {'female_friendly': 0,
+              'fun': 0,
+              'happiness': 0,
               'healthcare': 0,
-              'lgbt_tolerance': 0,
-              'less_smokers': 0}
+              'lgbt_friendly': 0,
+              'nightlife': 0,
+              'peace': 0,
+              'racial_tolerance': 0,
+              'religious_government': 0,
+              'safety': 0,
+              'startup_score': 0,
+              'traffic_safety': 0,
+              'walkability': 0}
 
 
 @app.route('/', methods=['GET', 'POST'])
 def main():
     if request.method == 'GET':
-        return next_question()
+        rand_val = random.randrange(2)
+        if rand_val == 0:
+            return next_question()
+        else:
+            return next_image()
     elif request.method == 'POST':
         return update_perk(request)
 
+# def next_image():
+#     ImageGetterCached(  get_random_imgs
 
 def remove_question(name):
     for i in range(len(questions)):
