@@ -3,7 +3,7 @@ import random
 from flask import Flask, jsonify, request
 import configparser
 from modules.cities_collection import CitiesCollection
-from modules.images_getter import ImageGetter
+from modules.images_getter import ImageGetterCached
 
 app = Flask(__name__)
 
@@ -100,7 +100,7 @@ def test():
     config = configparser.ConfigParser()
     config.read(CONFIG_FP)
 
-    img_getter = ImageGetter(config['google.api']['developer_key'], config['google.api']['cx'])
+    img_getter = ImageGetterCached(config['google.api']['developer_key'], config['google.api']['cx'])
     imgs = img_getter.get("Istanbul")
     print(imgs)
 
