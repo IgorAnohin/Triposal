@@ -1,6 +1,7 @@
 from google_images_search import GoogleImagesSearch
 import pickle
 import os.path
+import random
 
 
 class ImageGetter:
@@ -32,6 +33,9 @@ class ImageGetterCached(ImageGetter):
         else:
             self._cache = {}
 
+    def _get_random(self, urls):
+        return random.choice(urls)
+
     def _dump_cache(self):
         self._cache_idx = 0
         pickle.dump(self._cache, open(self.CACHE_FP, 'wb'))
@@ -56,3 +60,8 @@ class ImageGetterCached(ImageGetter):
         if self._cache_idx >= self.CACHE_DUMP_IDX:
             self._dump_cache()
         return result
+
+    def get_random_imgs(self, lhs, rhs):
+        urls_lhs = self.get(lhs)
+        urls_rhs = self.get(rhs)
+        return self._get_random(urls_lhs), self._get_random(urls_rhs)
