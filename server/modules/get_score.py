@@ -28,6 +28,7 @@ class ScoreCalculator():
         cities = np.array(self.cities_collection.get_cities())[cities]
 
         print(cities)
+        return cities
 
 
 S = ScoreCalculator({
