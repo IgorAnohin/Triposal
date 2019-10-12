@@ -70,7 +70,7 @@ def increase_city_score(local_request):
     return jsonify({'status': 'confirmed'})
 
 
-def
+# def
 
 
 def next_image():
@@ -124,9 +124,9 @@ def test():
     config.read(CONFIG_FP)
 
     img_getter = ImageGetterCached(config['google.api']['developer_key'], config['google.api']['cx'])
-    imgs = img_getter.get("Istanbul")
-    print(imgs)
+    img1, img2 = img_getter.get_random_imgs("France", "Russia")
 
 
 if __name__ == '__main__':
-    app.run()
+    # app.run()
+    test()
