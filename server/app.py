@@ -4,6 +4,7 @@ import random
 from flask import Flask, jsonify, request
 
 from modules.images_getter import ImageGetterCached
+from modules.get_score import ScoreCalculator
 
 app = Flask(__name__)
 
@@ -47,10 +48,10 @@ city_perks = {'female_friendly': 0,
 def main():
     if request.method == 'GET':
         rand_val = random.randrange(2)
-        if rand_val == 0:
-            return next_question()
-        else:
-            return next_image()
+        #if rand_val == 0:
+        return next_question()
+        #else:
+        #    return next_image()
     elif request.method == 'POST':
         return update_perk(request)
 
@@ -72,10 +73,13 @@ def remove_question(name):
 
 
 def update_perk(local_request):
+    global city_perks
     perk = local_request.args.get('question_perk')
     value = local_request.args.get('value')
     remove_question(perk)
+    print('updating city perk ' + perk + ' to ' + str(value))
     city_perks[perk] = value
+    print(city_perks)
     return jsonify({'status': 'confirmed'})
 
 
@@ -85,7 +89,8 @@ def next_question():
 
 @app.route('/final', methods=['GET'])
 def final_result():
-    return 'kek'
+    score = ScoreCalculator(city_perks)
+    return jsonify(score.get_city_recommendation(3))
 
 
 if __name__ == '__main__':
