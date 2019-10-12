@@ -5,6 +5,7 @@ from flask import Flask, jsonify, request
 
 from modules.images_getter import ImageGetterCached
 from modules.get_score import ScoreCalculator
+from modules.price_finder import PriceFinder
 
 app = Flask(__name__)
 
@@ -48,10 +49,10 @@ city_perks = {'female_friendly': 0,
 def main():
     if request.method == 'GET':
         rand_val = random.randrange(2)
-        #if rand_val == 0:
-        return next_question()
-        #else:
-        #    return next_image()
+        if rand_val == 0:
+            return next_question()
+        else:
+            return next_image()
     elif request.method == 'POST':
         return update_perk(request)
 
@@ -89,8 +90,21 @@ def next_question():
 
 @app.route('/final', methods=['GET'])
 def final_result():
-    score = ScoreCalculator(city_perks)
-    return jsonify(score.get_city_recommendation(3))
+    cities = ScoreCalculator(city_perks).get_city_recommendation()
+    flights = []
+    for city in cities:
+        flights.append(PriceFinder().get_price(city, max_results=1))
+    return flights
+
+
+@app.route('/image')
+def test():
+    config = configparser.ConfigParser()
+    config.read(CONFIG_FP)
+
+    img_getter = ImageGetterCached(config['google.api']['developer_key'], config['google.api']['cx'])
+    imgs = img_getter.get("Istanbul")
+    print(imgs)
 
 
 if __name__ == '__main__':
