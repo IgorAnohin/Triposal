@@ -2,7 +2,7 @@ import pandas as pd
 
 
 class CitiesCollection:
-    DEFAULT_FP = "cities_predict.csv"
+    DEFAULT_FP = "data/cities_predict.csv"
 
     def _preprocess_data(self, data):
         def prettify_place(row):
