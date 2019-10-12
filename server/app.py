@@ -1,8 +1,8 @@
+import configparser
 import random
 
 from flask import Flask, jsonify, request
-import configparser
-from modules.cities_collection import CitiesCollection
+
 from modules.images_getter import ImageGetterCached
 
 app = Flask(__name__)
@@ -10,17 +10,21 @@ app = Flask(__name__)
 CONFIG_FP = 'config.conf'
 
 questions = [
-    {'question_text': 'How family friendly should the city be?', 'question_perk': 'female_friendly', 'min': 0, 'max': 5},
+    {'question_text': 'How family friendly should the city be?', 'question_perk': 'female_friendly', 'min': 0,
+     'max': 5},
     {'question_text': 'How fun should be the city?', 'question_perk': 'fun', 'min': 0, 'max': 5},
     {'question_text': 'Happiness level of the city?', 'question_perk': 'happiness', 'min': 0, 'max': 5},
     {'question_text': 'Healthcare level in the city?', 'question_perk': 'healthcare', 'min': 0, 'max': 5},
     {'question_text': 'Should the city be LGBT friendly?', 'question_perk': 'lgbt_friendly', 'min': 0, 'max': 5},
     {'question_text': 'Nightlife activity in the city.', 'question_perk': 'nightlife', 'min': 0, 'max': 5},
     {'question_text': 'How peaceful is the city required to be?', 'question_perk': 'peace', 'min': 0, 'max': 5},
-    {'question_text': 'Tolerance level towards non-local races?', 'question_perk': 'racial_tolerance', 'min': 0, 'max': 5},
-    {'question_text': 'How religious should be the government?', 'question_perk': 'religious_government', 'min': 0, 'max': 5},
+    {'question_text': 'Tolerance level towards non-local races?', 'question_perk': 'racial_tolerance', 'min': 0,
+     'max': 5},
+    {'question_text': 'How religious should be the government?', 'question_perk': 'religious_government', 'min': 0,
+     'max': 5},
     {'question_text': 'Required safety level?', 'question_perk': 'safety', 'min': 0, 'max': 5},
-    {'question_text': 'How good is the city for developing a startup?', 'question_perk': 'startup_score', 'min': 0, 'max': 5},
+    {'question_text': 'How good is the city for developing a startup?', 'question_perk': 'startup_score', 'min': 0,
+     'max': 5},
     {'question_text': 'How safe is the traffic?', 'question_perk': 'traffic_safety', 'min': 0, 'max': 5},
     {'question_text': 'How good is the city for walks?', 'question_perk': 'walkability', 'min': 0, 'max': 5}]
 
@@ -50,8 +54,15 @@ def main():
     elif request.method == 'POST':
         return update_perk(request)
 
-# def next_image():
-#     ImageGetterCached(  get_random_imgs
+
+def next_image():
+    config = configparser.ConfigParser()
+    config.read(CONFIG_FP)
+
+    img_getter = ImageGetterCached(config['google.api']['developer_key'], config['google.api']['cx'])
+    imgs = img_getter.get_random_imgs("Istanbul", "Groningen")
+    return jsonify(imgs)
+
 
 def remove_question(name):
     for i in range(len(questions)):
@@ -75,16 +86,6 @@ def next_question():
 @app.route('/final', methods=['GET'])
 def temporary():
     return 'kek'
-
-
-@app.route('/image')
-def test():
-    config = configparser.ConfigParser()
-    config.read(CONFIG_FP)
-
-    img_getter = ImageGetterCached(config['google.api']['developer_key'], config['google.api']['cx'])
-    imgs = img_getter.get("Istanbul")
-    print(imgs)
 
 
 if __name__ == '__main__':
