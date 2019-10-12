@@ -8,28 +8,39 @@ from modules.images_getter import ImageGetter
 app = Flask(__name__)
 
 CONFIG_FP = 'config.conf'
-app = Flask(__name__)
 
 questions = [
-    {'question_text': 'is internet speed important', 'question_perk': 'internet_speed', 'min': 0, 'max': 5},
-    {'question_text': 'question text', 'question_perk': 'overall_safety', 'min': 0, 'max': 5},
+    {'question_text': 'is internet speed important', 'question_perk': 'female_friendly', 'min': 0, 'max': 5},
+            'happiness': 'happiness',
+            'healthcare': 'healthcare',
+            'lgbt_friendly': 'lgbt friendly',
+            'nightlife': 'nightlife',
+            'peace': 'peace',
+            'quality_of_life': 'quality of life',
+            'racial_tolerance': 'racial tolerance',
+            'religious_government': 'religious government',
+            'safety': 'safety',
+            'startup_score': 'startup score',
+            'traffic_safety': 'traffic safety',
+            'walkability': 'walkability'
+    {'question_text': 'question text', 'question_perk': 'fun', 'min': 0, 'max': 5},
     {'question_text': 'question text', 'question_perk': 'affordable_prices', 'min': 0, 'max': 5},
     {'question_text': 'question text', 'question_perk': 'entertainment_variety', 'min': 0, 'max': 5},
-    {'question_text': 'question text', 'question_perk': 'air_quality', 'min': 0, 'max': 5},
+    {'question_text': 'question text', 'question_perk': 'air_quality', 'min': 0, 'max': 6},
     {'question_text': 'question text', 'question_perk': 'spacious', 'min': 0, 'max': 5},
     {'question_text': 'question text', 'question_perk': 'business_center', 'min': 0, 'max': 5},
-    {'question_text': 'question text', 'question_perk': 'good_education', 'min': 0, 'max': 5},
-    {'question_text': 'question text', 'question_perk': 'safe_roads', 'min': 0, 'max': 5},
-    {'question_text': 'question text', 'question_perk': 'freedom_of_speech', 'min': 0, 'max': 5},
+    {'question_text': 'question text', 'question_perk': 'good_education', 'min': 0, 'max': 6},
+    {'question_text': 'question text', 'question_perk': 'safe_roads', 'min': 0, 'max': 6},
+    {'question_text': 'question text', 'question_perk': 'freedom_of_speech', 'min': 0, 'max': 6},
     {'question_text': 'question text', 'question_perk': 'democratic', 'min': 0, 'max': 5},
-    {'question_text': 'question text', 'question_perk': 'good_english', 'min': 0, 'max': 5},
-    {'question_text': 'question text', 'question_perk': 'safe_for_women', 'min': 0, 'max': 5},
+    {'question_text': 'question text', 'question_perk': 'good_english', 'min': 0, 'max': 6},
+    {'question_text': 'question text', 'question_perk': 'safe_for_women', 'min': 0, 'max': 6},
     {'question_text': 'question text', 'question_perk': 'avoid_humidity', 'min': 0, 'max': 5},
     {'question_text': 'question text', 'question_perk': 'winter_temperature', 'min': 0, 'max': 5},
-    {'question_text': 'question text', 'question_perk': 'summer_temperature', 'min': 0, 'max': 5},
-    {'question_text': 'question text', 'question_perk': 'healthcare', 'min': 0, 'max': 5},
-    {'question_text': 'question text', 'question_perk': 'lgbt_tolerance', 'min': 0, 'max': 5},
-    {'question_text': 'question text', 'question_perk': 'less_smokers', 'min': 0, 'max': 5}]
+    {'question_text': 'question text', 'question_perk': 'summer_temperature', 'min': 0, 'max': 6},
+    {'question_text': 'question text', 'question_perk': 'healthcare', 'min': 0, 'max': 6},
+    {'question_text': 'question text', 'question_perk': 'lgbt_tolerance', 'min': 0, 'max': 6},
+    {'question_text': 'question text', 'question_perk': 'less_smokers', 'min': 0, 'max': 6}]
 
 city_perks = {'internet_speed': 0,
               'overall_safety': 0,
@@ -58,16 +69,21 @@ def main():
         return next_question()
     elif request.method == 'POST':
         return update_perk(request)
-    else:
-        return jsonify({'quarks': questions})
 
 
-def update_perk(request):
-    perk = request.args.get('question_perk')
-    value = request.args.get('value')
-    questions.pop(perk)
-    print(len(questions))
+def remove_question(name):
+    for i in range(len(questions)):
+        if questions[i]['question_perk'] == name:
+            questions.pop(i)
+            break
+
+
+def update_perk(local_request):
+    perk = local_request.args.get('question_perk')
+    value = local_request.args.get('value')
+    remove_question(perk)
     city_perks[perk] = value
+    return jsonify({'status': 'confirmed'})
 
 
 def next_question():
@@ -75,7 +91,7 @@ def next_question():
 
 
 @app.route('/final', methods=['GET'])
-def main():
+def temporary():
     return 'kek'
 
 
