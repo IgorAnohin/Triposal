@@ -9,18 +9,20 @@ def shuffle_copy(lst):
 
 
 class Question(object):
-    def __init__(self, text, perk, min_, max_):
+    def __init__(self, text, perk, min_, max_, image_):
         self.question_text = text
         self.question_perk = perk
         self.min = min_
         self.max = max_
+        self.image = image_
 
     def to_json(self):
         return {
             'question_text': self.question_text,
             'question_perk': self.question_perk,
             'min': self.min,
-            'max': self.max
+            'max': self.max,
+            'image': self.image
         }
 
 
@@ -74,7 +76,7 @@ class CitiesFunnel:
         if bool(random.getrandbits(1)):
             feature = self._get_next_static_feature()
             min_, max_ = self.cities_collection.get_range(feature)
-            return Question(self.cities_collection.get_question(feature), feature, min_, max_)
+            return Question(self.cities_collection.get_question(feature), feature, min_, max_, self.cities_collection.get_image(feature))
         else:
             city1, city2 = self._get_next_dynamic_feature()
             url1, url2 = self.img_getter.get_random_imgs(city1, city2)
