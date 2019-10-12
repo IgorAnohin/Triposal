@@ -54,7 +54,23 @@ def main():
         else:
             return next_image()
     elif request.method == 'POST':
-        return update_perk(request)
+        if request.args.get('image') == 1:
+            print('pressed on a photo')
+            return increase_city_score(request)
+        else:
+            return update_perk(request)
+
+
+votes = {}
+
+
+def increase_city_score(local_request):
+    city_name = request.args.get('city_key')
+    votes[city_name] += 1
+    return jsonify({'status': 'confirmed'})
+
+
+def
 
 
 def next_image():
@@ -62,8 +78,11 @@ def next_image():
     config.read(CONFIG_FP)
 
     img_getter = ImageGetterCached(config['google.api']['developer_key'], config['google.api']['cx'])
-    imgs = img_getter.get_random_imgs("Istanbul", "Groningen")
-    return jsonify(imgs)
+    cities = {'city1_name': 'istanbul', 'city2_name': 'groningen', 'city1': '', 'city2': ''}
+    imgs = img_getter.get_random_imgs("istanbul", "groningen")
+    cities['city1'] = imgs[0]
+    cities['city2'] = imgs[1]
+    return jsonify(cities)
 
 
 def remove_question(name):
@@ -78,7 +97,7 @@ def update_perk(local_request):
     perk = local_request.args.get('question_perk')
     value = local_request.args.get('value')
     remove_question(perk)
-    print('updating city perk ' + perk + ' to ' + str(value))
+    print('updating city perk ' + str(perk) + ' to ' + str(value))
     city_perks[perk] = value
     print(city_perks)
     return jsonify({'status': 'confirmed'})
@@ -90,11 +109,13 @@ def next_question():
 
 @app.route('/final', methods=['GET'])
 def final_result():
-    cities = ScoreCalculator(city_perks).get_city_recommendation()
+    cities = ScoreCalculator(city_perks).get_city_recommendation(3)
     flights = []
+    config = configparser.ConfigParser()
+    config.read(CONFIG_FP)
     for city in cities:
-        flights.append(PriceFinder().get_price(city, max_results=1))
-    return flights
+        flights.append(PriceFinder(config['skyscanner.api']['api_key']).get_price(city, max_results=1))
+    return jsonify(flights)
 
 
 @app.route('/image')

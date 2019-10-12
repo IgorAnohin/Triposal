@@ -24,6 +24,7 @@ class ImageGetter:
 class ImageGetterCached(ImageGetter):
     CACHE_FP = 'data/img_cache.pickle'
     CACHE_DUMP_IDX = 10
+
     # cache structure:
     # country: (count, [url1, url2, url3, ...])
 
@@ -64,4 +65,5 @@ class ImageGetterCached(ImageGetter):
     def get_random_imgs(self, lhs, rhs):
         urls_lhs = self.get(lhs)
         urls_rhs = self.get(rhs)
-        return self._get_random(urls_lhs), self._get_random(urls_rhs)
+        urls = [self._get_random(urls_lhs), self._get_random(urls_rhs)]
+        return urls
