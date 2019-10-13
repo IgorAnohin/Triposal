@@ -13,6 +13,7 @@ def get_booking_url(to_city_id, quote, from_city_id="BCN"):
     base_url = "https://www.skyscanner.de/transporte/vuelos/"
     outbound_date = quote.get("OutboundLeg", {}).get("DepartureDate", "")
     inbound_date = quote.get("InboundLeg", {}).get("DepartureDate", "")
+    to_city_id = to_city_id.split("-")[0]
     return f"{base_url}/{from_city_id}/{to_city_id}/{outbound_date}/{inbound_date}/"
 
 
