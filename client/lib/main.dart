@@ -56,14 +56,14 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Good day',
+              'Triposal',
               style: TextStyle(color: Colors.white, fontSize: 28.0),
             ),
             Padding(
               padding: EdgeInsets.all(14.0),
             ),
             Text(
-              'Do you wanna play a game?',
+              "What's going to be your next journey?",
               style: TextStyle(color: Colors.white, fontSize: 18.0),
             ),
             Padding(
@@ -89,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text("Pick up the trip", style: TextStyle(fontSize: 18)),
+                      Text("Let's find out!", style: TextStyle(fontSize: 18)),
                       Padding(
                         padding: EdgeInsets.only(left: 5.0, right: 5.0),
                       ),

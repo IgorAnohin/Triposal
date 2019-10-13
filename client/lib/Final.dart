@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
+
 
 import 'dart:convert';
 
@@ -51,7 +53,7 @@ class _FinalState extends State<Final>{
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text("Loading the results...", style: TextStyle(color: Colors.white),),
+              Text("Loading the results...\n", style: TextStyle(color: Colors.white),),
               CircularProgressIndicator(backgroundColor: Colors.green,),
             ],
           ),
@@ -104,7 +106,9 @@ class _FinalState extends State<Final>{
                         ButtonTheme(
                           minWidth: 190.0,
                           child:RaisedButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              await _launchURL(_dataFlights[index]["booking_url"]);
+                            },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
@@ -134,4 +138,13 @@ class _FinalState extends State<Final>{
       ),
     );
   }
+
+  _launchURL(url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
 }

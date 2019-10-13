@@ -23,6 +23,7 @@ dependencies:
   auto_size_text: 2.1.0
   flutter_seekbar:
     git: https://github.com/LiuC520/flutter_seekbar.git
+  url_launcher: 5.1.6
 
 
 

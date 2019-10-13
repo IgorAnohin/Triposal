@@ -53,7 +53,7 @@ class _GameState extends State<Game>{
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text("Loading the question...", style: TextStyle(color: Colors.white),),
+                Text("Fetching content...\n", style: TextStyle(color: Colors.white),),
                 CircularProgressIndicator(backgroundColor: Colors.green,),
               ],
             ),
@@ -87,7 +87,7 @@ class _GameState extends State<Game>{
                       Route route = MaterialPageRoute(builder: (context) => Final());
                       Navigator.pushReplacement(context, route);
                     },
-                    child: Text("STOP", style: TextStyle(fontSize: 20)),
+                    child: Text("See the results", style: TextStyle(fontSize: 20)),
                     shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(28.0),
                         side: BorderSide(color: Colors.purple)),
@@ -118,11 +118,12 @@ class _GameState extends State<Game>{
 
   Widget binaryQuestion(data, BuildContext context) {
     var _question = data["question_text"].toString();
+    var _image1 = data["image"].toString();
     return Column (
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 20.0),
+          padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 20.0, bottom: 40.0),
           child: AutoSizeText(
             _question,
             style: TextStyle(fontSize: 20),
@@ -130,7 +131,17 @@ class _GameState extends State<Game>{
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(left: 30.0, right: 30.0, bottom: 20.0),
+          padding: EdgeInsets.only(left: 10.0, right: 10.0),
+          child: GestureDetector(
+            child: Image.network(
+              _image1,
+              fit: BoxFit.fitWidth,
+              width: MediaQuery.of(context).size.width,
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 30.0, right: 30.0, top: 40),
           child: ButtonTheme(
             minWidth: 250.0,
             child: RaisedButton(
@@ -150,7 +161,7 @@ class _GameState extends State<Game>{
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(left: 30.0, right: 30.0, bottom: 20.0),
+          padding: EdgeInsets.only(left: 30.0, right: 30.0),
           child: ButtonTheme(
             minWidth: 250.0,
             child: RaisedButton(
@@ -247,7 +258,7 @@ class _GameState extends State<Game>{
               },
               color: Colors.green,
               textColor: Colors.white,
-              child: Text("Pick", style: TextStyle(fontSize: 20)),
+              child: Text("Next", style: TextStyle(fontSize: 20)),
             ),
           ),
         ),
