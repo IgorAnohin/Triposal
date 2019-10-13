@@ -14,7 +14,9 @@ def get_booking_url(to_city_id, quote, from_city_id="BCN"):
     outbound_date = quote.get("OutboundLeg", {}).get("DepartureDate", "")
     inbound_date = quote.get("InboundLeg", {}).get("DepartureDate", "")
     to_city_id = to_city_id.split("-")[0]
-    return f"{base_url}/{from_city_id}/{to_city_id}/{outbound_date}/{inbound_date}/"
+    outbound_date = outbound_date.split("T")[0]
+    inbound_date = inbound_date.split("T")[0]
+    return f"{base_url}{from_city_id}/{to_city_id}/{outbound_date}/{inbound_date}/"
 
 
 class PriceFinder:
