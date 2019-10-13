@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Sat Oct 12 08:51:58 CEST 2019
+#Sun Oct 13 02:10:56 CEST 2019
 4.path=flutter_assets/FontManifest.json
 8.set=NATIVE_RESOURCE
 6.path=flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf
@@ -7,7 +7,7 @@
 10.path=flutter_assets/AssetManifest.json
 5.baseType=DIRECTORY
 1.base=/home/igor-emlid/Documents/Flutter/akinotor/client/build/app/intermediates/merged_assets/debug/mergeDebugAssets/out
-8.path=lib/x86_64/libflutter.so
+8.path=lib/armeabi-v7a/libflutter.so
 3.base=/home/igor-emlid/Documents/Flutter/akinotor/client/build/app/intermediates/transforms/mergeJniLibs/debug/0
 4.set=ASSET
 5.base=/home/igor-emlid/Documents/Flutter/akinotor/client/build/app/intermediates/merged_assets/debug/mergeDebugAssets/out
@@ -28,7 +28,7 @@
 10.set=ASSET
 5.path=flutter_assets/kernel_blob.bin
 0.base=/home/igor-emlid/Documents/Flutter/akinotor/client/build/app/intermediates/merged_assets/debug/mergeDebugAssets/out
-7.path=lib/armeabi-v7a/libflutter.so
+7.path=lib/x86_64/libflutter.so
 11.path=flutter_assets/isolate_snapshot_data
 9.path=classes.dex
 6.set=ASSET

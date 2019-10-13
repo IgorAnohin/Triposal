@@ -4,6 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:http/http.dart' as http;
 
 import 'dart:convert';
+import 'Final.dart';
 
 
 
@@ -18,18 +19,22 @@ class _GameState extends State<Game>{
   var _value = 0.0;
 
   Future<Null> fetchPost() async {
-    var response = await http.get('http://31571392.ngrok.io/');
-    if (response.statusCode == 200) {
-      // If server returns an OK response, parse the JSON.
-      var data = json.decode(response.body);
-      this.setState(() {
-        _data = data;
-        print("ASSIGNING");
-        print(_data);
-      });
-    } else {
-      // If that response was not OK, throw an error.
-      throw Exception('Failed to load post');
+//    var response = await http.get('http://264ba2f2.ngrok.io');
+    while (_data == null) {
+      var response = await http.get('http://52.15.65.153:5000/');
+      if (response.statusCode == 200) {
+        // If server returns an OK response, parse the JSON.
+        var data = json.decode(response.body);
+//      var data = json.decode("{ \"city1\": \"https://instanbul.jpg\", \"city1_name\": \"instanbul\", \"city2\": \"https://instanbul.jpg\", \"city2_name\":     \"barcelona\" }");
+        this.setState(() {
+          _data = data;
+          print("ASSIGNING");
+          print(_data);
+        });
+      } else {
+        // If that response was not OK, throw an error.
+        print('Failed to load post');
+      }
     }
   }
 
@@ -42,7 +47,18 @@ class _GameState extends State<Game>{
   @override
   Widget build(BuildContext context) {
     if (_data == null)
-      return Center(child: CircularProgressIndicator());
+      return Scaffold(
+          backgroundColor: Colors.blue,
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text("Loading the question...", style: TextStyle(color: Colors.white),),
+                CircularProgressIndicator(backgroundColor: Colors.green,),
+              ],
+            ),
+          )
+      );
     return Scaffold(
       backgroundColor: Colors.blue,
       body: Stack(
@@ -59,6 +75,29 @@ class _GameState extends State<Game>{
               child: createQuestion(_data, context),
             ),
           ),
+          Container(
+            child: Align(
+              alignment: FractionalOffset.bottomCenter,
+              child: Padding(
+                padding: EdgeInsets.only(left: 10.0, right: 10.0, bottom: 20.0),
+                child: ButtonTheme(
+                  minWidth: 250.0,
+                  child:RaisedButton(
+                    onPressed: () {
+                      Route route = MaterialPageRoute(builder: (context) => Final());
+                      Navigator.pushReplacement(context, route);
+                    },
+                    child: Text("STOP", style: TextStyle(fontSize: 20)),
+                    shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(28.0),
+                        side: BorderSide(color: Colors.purple)),
+                    color: Colors.purple,
+                    textColor: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
         ]
       )
     );
@@ -69,7 +108,10 @@ class _GameState extends State<Game>{
       return seekBarQuestion(data, context);
     if (data["city1"] != null)
       return imagesQuestions(data, context);
+
     print(data);
+    Route route = MaterialPageRoute(builder: (context) => Final());
+    Navigator.pushReplacement(context, route);
   }
 
 
@@ -126,8 +168,8 @@ class _GameState extends State<Game>{
               shape: new RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(28.0),
                   side: BorderSide(color: Colors.green)),
-              onPressed: () {
-                sendPost(_data["question_perk"].toString(), _value);
+              onPressed: () async {
+                await sendPost(_data["question_perk"].toString(), _value);
                 Route route = MaterialPageRoute(builder: (context) => Game());
                 Navigator.pushReplacement(context, route);
                 print("PICK UP TRIP WAS PUSHED");
@@ -166,19 +208,23 @@ class _GameState extends State<Game>{
             },
             child: Image.network(
               _image1,
+              fit: BoxFit.fitWidth,
+              width: MediaQuery.of(context).size.width,
             ),
           ),
         ),
         Padding(
           padding: EdgeInsets.only(left: 10.0, right: 10.0),
           child: GestureDetector(
-            onTap: () {
-              sendImagePost(data["city2_name"].toString());
+            onTap: () async {
+              await sendImagePost(data["city2_name"].toString());
               Route route = MaterialPageRoute(builder: (context) => Game());
               Navigator.pushReplacement(context, route);
             },
             child: Image.network(
               _image2,
+              fit: BoxFit.fitWidth,
+              width: MediaQuery.of(context).size.width,
             ),
           ),
         ),
@@ -189,11 +235,13 @@ class _GameState extends State<Game>{
     );
   }
 
-  void sendImagePost(String city) {
+  Future<Null> sendImagePost(String city) async {
     var map = new Map<String, dynamic>();
     map["city"] = city;
-    http.post('http://31571392.ngrok.io/', body: map).then((
-        http.Response response) {
+//    http.post('http://264ba2f2.ngrok.io', body: map).then((
+    print(map);
+    print("HERE");
+    await http.post('http://52.15.65.153:5000/', body: map).then((http.Response response) {
       final int statusCode = response.statusCode;
 
       if (statusCode < 200 || statusCode > 400 || json == null) {
@@ -203,13 +251,16 @@ class _GameState extends State<Game>{
     });
   }
 
-  void sendPost(perk, double value) {
+  Future<Null> sendPost(perk, double value) async {
     var map = new Map<String, dynamic>();
     map["question_perk"] = perk;
     map["value"] = value.toInt().toString();
-    http.post('http://31571392.ngrok.io/', body: map).then((http.Response response) {
+    print(map);
+    print("HERE");
+//    http.post('http://264ba2f2.ngrok.io', body: map).then((http.Response response) {
+    await http.post('http://52.15.65.153:5000/', body: map).then((http.Response response) {
       final int statusCode = response.statusCode;
-
+      print("statusCode $statusCode");
       if (statusCode < 200 || statusCode > 400 || json == null) {
         throw new Exception("Error while fetching data");
       }

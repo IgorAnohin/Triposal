@@ -9,6 +9,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -62,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.all(14.0),
             ),
             Text(
-              'Are you ready?',
+              'Do you wanna play a game?',
               style: TextStyle(color: Colors.white, fontSize: 18.0),
             ),
             Padding(
