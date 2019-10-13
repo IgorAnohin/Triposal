@@ -2,10 +2,10 @@ import requests
 import datetime
 
 
-def get_last_week():
+def get_last_week(fmt='%Y-%m-%d'):
     today = datetime.datetime.now()
-    next_week = (today + datetime.timedelta(days=7)).strftime("%Y-%m-%d")
-    next_week2 = (today + datetime.timedelta(days=14)).strftime("%Y-%m-%d")
+    next_week = (today + datetime.timedelta(days=7)).strftime(fmt)
+    next_week2 = (today + datetime.timedelta(days=14)).strftime(fmt)
     return next_week, next_week2
 
 
@@ -67,5 +67,4 @@ class PriceFinder:
             to_return = sorted(to_return, key=lambda x: x.get(
                 "MinPrice", "QuoteDateTime"))
             return to_return[:min([max_results, len(to_return)])]
-        print("ERROR:price_finder:get_price: No flights found")
         return None

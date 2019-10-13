@@ -117,7 +117,7 @@ class CitiesCollection:
     def get_range(self, feature):
         return self._features_ranges_mapping.get(feature, (1, 5))
 
-    def __init__(self):
+    def __init__(self, cities):
         self._old_new_scored_features_mapping = self._get_old_new_scored_features_mapping()
         self._scored_features = list(self._old_new_scored_features_mapping.values())
 
@@ -131,3 +131,4 @@ class CitiesCollection:
 
         self.data = self._load_table(self.DEFAULT_FP)
         self.images = self._load_images(self.IMAGES_FP)
+        self.data = self.data[self.data['city'].isin(cities)]

@@ -1,5 +1,8 @@
 import random
 from .cities_collection import CitiesCollection
+from .images_getter import ImageGetterCached
+import logging
+import pandas as pd
 
 
 def shuffle_copy(lst):
@@ -41,7 +44,7 @@ class QuestionBinary(object):
             'question_perk': self.question_perk,
             'image': self.image
         }
-        print('JSON\n', json)
+        print(json)
         return json
 
 
@@ -59,11 +62,14 @@ class CityQuestion(object):
             'city1': self.city1,
             'city2': self.city2
         }
-        print('JSON\n', json)
+        print(json)
         return json
 
 
 class CitiesFunnel:
+    def _get_available_cities(self):
+        return pd.read_csv('data/sightseeing.csv')['city'].tolist()
+
     def init(self):
         self.data = self.cities_collection.data.copy()
         self.static_scored_features = shuffle_copy(self.cities_collection.get_scored_features())
@@ -73,7 +79,7 @@ class CitiesFunnel:
         self.current_static_binary_feature_idx = 0
 
     def __init__(self, img_getter):
-        self.cities_collection = CitiesCollection()
+        self.cities_collection = CitiesCollection(self._get_available_cities())
         self.img_getter = img_getter
         self.cities_set = set(self.cities_collection.get_cities())
 
