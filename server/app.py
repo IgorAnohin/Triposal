@@ -7,7 +7,6 @@ from modules.images_getter import ImageGetterCached, ImageGetterLocal
 from modules.price_finder import PriceFinder
 from modules.cities_funnel import CitiesFunnel
 
-
 CONFIG_FP = 'config.conf'
 config = configparser.ConfigParser()
 config.read(CONFIG_FP)
@@ -38,7 +37,7 @@ def form_web_url():
 
 def merge_with_flights(cities):
     flights = [price_finder.get_price(city, max_results=1)[0] for city in cities]
-    min_prices = [flight[0]['MinPrice'] if len(flight) > 0 else 0 for flight in flights]
+    min_prices = [flight['MinPrice'] if len(flight) > 0 else 0 for flight in flights]
     booking_urls = [flight['booking_url'] for flight in flights]
     urls = [img_getter.get_random_url('sightseeing', city) for city in cities]
     return [{'city': city, 'min_price': min_price, 'url': url, 'booking_url': booking_url} for (city, min_price, url, booking_url) in zip(cities, min_prices, urls, booking_urls)]
@@ -54,17 +53,18 @@ def main():
     if request.method == 'GET':
         return jsonify(funnel.get_next_question().to_json())
     elif request.method == 'POST':
-        print('request', request.args)
+        import json
+        print("request.data", request.data)
         print('request.json', request.json)
-        print('request.form', request.form)
-        print('request.headers', request.__dict__)
-        print('request.data', request.data)
-        if request.args.get('image') == 1:
-            feature = request.args.get('city')
+        print("request", request.__dict__)
+
+        d = json.loads(request.data)
+        if 'city' in d:
+            feature = d.get('city')
             score = 1
         else:
-            feature = request.args.get('question_perk')
-            score = request.args.get('value')
+            feature = d.get('question_perk')
+            score = int(d.get('value'))
 
         resulted_cities = funnel.set_rating(feature, score)
         json = {'status': 'confirmed'}

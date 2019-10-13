@@ -119,8 +119,7 @@ class CitiesFunnel:
             return QuestionScored(self.cities_collection.get_numeric_question(feature), feature, min_, max_,
                                   self.cities_collection.get_image(feature))
         elif rand_val == 1:
-            city1, city2 = self._get_next_dynamic_feature()
-            url1, url2 = self.img_getter.get_random_imgs(city1, city2)
+            city1, city2, url1, url2 = self._get_next_dynamic_feature()
             return CityQuestion(city1, city2, url1, url2)
         else:
             feature = self._get_next_static_binary_feature()
@@ -147,11 +146,15 @@ class CitiesFunnel:
         d = self.data
         delta = 3
         min_valuable_count = 3
+        changed = False
         if feature not in self.cities_set:
-            self.data = self.data[(d[feature] > self.feature_scores[feature] - delta) & (
+            new_data = self.data[(d[feature] > self.feature_scores[feature] - delta) & (
                     d[feature] < self.feature_scores[feature] + delta)]
+            if len(new_data) > min_valuable_count:
+                changed = True
+                self.data = new_data
         # it will fail there
-        if len(self.data) <= min_valuable_count:
+        if len(self.data) <= min_valuable_count or (not changed):
             return self.find_best(min_valuable_count)
         return None
 
