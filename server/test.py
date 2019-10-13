@@ -41,7 +41,7 @@ def test2():
     config = configparser.ConfigParser()
     config.read('config.conf')
     price_finder = PriceFinder(config['skyscanner.api']['api_key'])
-    prices = price_finder.get_price(to_city_name='toronto')
+    prices = price_finder.get_price(to_city_name='Colorado Springs Co')
     print('prices')
     print(prices)
     url = form_web_url('toronto')

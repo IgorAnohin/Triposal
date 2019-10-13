@@ -140,7 +140,7 @@ class CitiesFunnel:
 
     def find_best(self, count):
         self.compute_scores()
-        return self.data.sort_values(by=['score'])['country'].iloc[:count].values
+        return self.data.sort_values(by=['score'])['city'].iloc[:count].values
 
     def _filter_cities(self, feature):
         d = self.data

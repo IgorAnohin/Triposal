@@ -36,6 +36,7 @@ def form_web_url():
 
 
 def merge_with_flights(cities):
+    print('cities', cities)
     flights = [price_finder.get_price(city, max_results=1)[0] for city in cities]
     min_prices = [flight['MinPrice'] if len(flight) > 0 else 0 for flight in flights]
     booking_urls = [flight['booking_url'] for flight in flights]
