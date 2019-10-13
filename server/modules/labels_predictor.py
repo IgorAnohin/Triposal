@@ -5,7 +5,7 @@ import pandas as pd
 
 
 class LabelPredictor:
-    available_labels = ['Landmark', 'Building', 'City', 'Human settlement', 'Public space', 'Town square', 'Town', 'Plaza', 'Architecture', 'Metropolitan area']
+    available_labels = ['Landmark', 'Architecture', 'Building', 'City', 'Sky', 'Human settlement', 'Tourism', 'Town', 'Historic site', 'Metropolitan area']
 
     def load_cache(self):
         df = pd.read_csv("ml_engine/ml_engine_cache.csv")
@@ -14,7 +14,7 @@ class LabelPredictor:
 
     def __init__(self):
         self.client = vision.ImageAnnotatorClient()
-        self._cache = None
+        self._cache = {}
         self.load_cache()
 
     def get_labels(self, url):

@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score
 
 
 def read_dataset():
-    path = 'image_labels.pickle'
+    path = 'image_label_sq.pickle'
     d = pickle.load(open(path, 'rb'))
     return d
 
@@ -55,7 +55,7 @@ def compute_features(d, labels, url_city_mapping):
 def train_and_learn(features):
     available_labels = ['Landmark', 'Building', 'City', 'Human settlement', 'Public space', 'Town square', 'Town',
                         'Plaza', 'Architecture', 'Metropolitan area']
-    lgbm = LGBMClassifier(n_estimators=10, silent=False, random_state=94, max_depth=5, num_leaves=31, objective='binary', metrics='auc')
+    lgbm = LGBMClassifier(n_estimators=10, silent=False, random_state=94, max_depth=5, num_leaves=31, objective='binary')
 
     y = features['city']
     features = features.drop(['city'], axis=1)
@@ -64,8 +64,6 @@ def train_and_learn(features):
     model = lgbm.fit(X_train, y_train)
     predicts = model.predict(X_test)
     # print(predicts)
-    print(model.predict_proba(pd.DataFrame([{av_lbl: 0.2 for av_lbl in available_labels}]))[0])
-    print('classes_', model.classes_)
     acc = accuracy_score(y_test, predicts)
     # print(acc)
     return model
@@ -87,8 +85,8 @@ def train_and_dump():
     features = compute_features(d, labels, url_city_mapping)
     features = pd.DataFrame(features, columns=labels + ['city'])
 
-    lgbm = LGBMClassifier(n_estimators=10, silent=False, random_state=94, max_depth=5, num_leaves=31,
-                          objective='binary', metrics='auc')
+    lgbm = LGBMClassifier(n_estimators=10, silent=False, random_state=94, max_depth=5, num_leaves=7,
+                          objective='binary')
     y = features['city']
     features = features.drop(['city'], axis=1)
     model = lgbm.fit(features, y)
@@ -101,11 +99,11 @@ def main():
     labels = get_labels(counters)
     print(labels)
 
-    url_city_mapping = get_url_country_mapping()
-    features = compute_features(d, labels, url_city_mapping)
-    features = pd.DataFrame(features, columns=labels + ['city'])
-
-    model = train_and_learn(features)
+    # url_city_mapping = get_url_country_mapping()
+    # features = compute_features(d, labels, url_city_mapping)
+    # features = pd.DataFrame(features, columns=labels + ['city'])
+    #
+    # model = train_and_learn(features)
 
 
 if __name__ == '__main__':
