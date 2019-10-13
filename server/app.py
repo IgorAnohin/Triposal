@@ -33,8 +33,9 @@ def choose_greeting():
 def merge_with_flights(cities):
     flights = [price_finder.get_price(city, max_results=1)[0] for city in cities]
     min_prices = [flight['MinPrice'] for flight in flights]
+    booking_urls = [flight['booking_url'] for flight in flights]
     urls = [img_getter.get(city, 'sightseeing', count=1)[0] for city in cities]
-    return [{'city': city, 'min_price': min_price, 'url': url} for (city, min_price, url) in zip(cities, min_prices, urls)]
+    return [{'city': city, 'min_price': min_price, 'url': url, 'booking_url': booking_url} for (city, min_price, url, booking_url) in zip(cities, min_prices, urls, booking_urls)]
 
 
 @app.route('/greeting', methods=['GET'])
