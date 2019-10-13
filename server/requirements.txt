@@ -3,3 +3,4 @@ configparser==4.0.2
 flask==1.0.2
 pandas==0.25.1
 numpy==1.15.4
+tqdm==4.36.1
