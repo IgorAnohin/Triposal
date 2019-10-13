@@ -108,10 +108,70 @@ class _GameState extends State<Game>{
       return seekBarQuestion(data, context);
     if (data["city1"] != null)
       return imagesQuestions(data, context);
+    if (data["type"] != null)
+      return binaryQuestion(data, context);
 
     print(data);
     Route route = MaterialPageRoute(builder: (context) => Final());
     Navigator.pushReplacement(context, route);
+  }
+
+  Widget binaryQuestion(data, BuildContext context) {
+    var _question = data["question_text"].toString();
+    return Column (
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 20.0),
+          child: AutoSizeText(
+            _question,
+            style: TextStyle(fontSize: 20),
+            maxLines: 2,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 30.0, right: 30.0, bottom: 20.0),
+          child: ButtonTheme(
+            minWidth: 250.0,
+            child: RaisedButton(
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(28.0),
+                  side: BorderSide(color: Colors.green)),
+              onPressed: () async {
+                await sendPost(_data["question_perk"].toString(), 5);
+                Route route = MaterialPageRoute(builder: (context) => Game());
+                Navigator.pushReplacement(context, route);
+                print("PICK UP TRIP WAS PUSHED");
+              },
+              color: Colors.green,
+              textColor: Colors.white,
+              child: Text("+", style: TextStyle(fontSize: 20)),
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 30.0, right: 30.0, bottom: 20.0),
+          child: ButtonTheme(
+            minWidth: 250.0,
+            child: RaisedButton(
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(28.0),
+                  side: BorderSide(color: Colors.blue)),
+              onPressed: () async {
+                await sendPost(_data["question_perk"].toString(), 1);
+                Route route = MaterialPageRoute(builder: (context) => Game());
+                Navigator.pushReplacement(context, route);
+                print("PICK UP TRIP WAS PUSHED");
+              },
+              color: Colors.blue,
+              textColor: Colors.white,
+              child: Text("-", style: TextStyle(fontSize: 20)),
+            ),
+          ),
+        ),
+      ],
+    );
+
   }
 
 
@@ -119,6 +179,7 @@ class _GameState extends State<Game>{
     var _max = double.parse(data["max"].toString());
     var _min = double.parse(data["min"].toString());
     var _question = data["question_text"].toString();
+    var _image1 = data["image"].toString();
     return Column (
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -159,6 +220,16 @@ class _GameState extends State<Game>{
                   _value =  v.value;
                 }
             )
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 10.0, right: 10.0),
+          child: GestureDetector(
+            child: Image.network(
+              _image1,
+              fit: BoxFit.fitWidth,
+              width: MediaQuery.of(context).size.width,
+            ),
+          ),
         ),
         Padding(
           padding: EdgeInsets.only(left: 30.0, right: 30.0, bottom: 20.0),
@@ -241,11 +312,11 @@ class _GameState extends State<Game>{
 //    http.post('http://264ba2f2.ngrok.io', body: map).then((
     print(map);
     print("HERE");
-    await http.post('http://52.15.65.153:5000/', body: map).then((http.Response response) {
+    await http.post('http://52.15.65.153:5000/', body: json.encode(map)).then((http.Response response) {
       final int statusCode = response.statusCode;
 
       if (statusCode < 200 || statusCode > 400 || json == null) {
-        throw new Exception("Error while fetching data");
+        print("Error while fetching data");
       }
       print("AWESOME");
     });
@@ -258,11 +329,11 @@ class _GameState extends State<Game>{
     print(map);
     print("HERE");
 //    http.post('http://264ba2f2.ngrok.io', body: map).then((http.Response response) {
-    await http.post('http://52.15.65.153:5000/', body: map).then((http.Response response) {
+    await http.post('http://52.15.65.153:5000/', body: json.encode(map)).then((http.Response response) {
       final int statusCode = response.statusCode;
       print("statusCode $statusCode");
       if (statusCode < 200 || statusCode > 400 || json == null) {
-        throw new Exception("Error while fetching data");
+        print("Error while fetching data");
       }
       print("AWESOME");
     });
