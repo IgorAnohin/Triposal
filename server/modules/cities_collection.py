@@ -1,8 +1,13 @@
 import pandas as pd
+import json
 
 
 class CitiesCollection:
     DEFAULT_FP = "data/cities_predict.csv"
+    IMAGES_FP = "data/images.json"
+
+    def _load_images(self, filepath):
+        return json.load(open(filepath, 'r'))
 
     def _preprocess_data(self, data):
         def prettify_place(row):
@@ -65,7 +70,7 @@ class CitiesCollection:
     def _get_numeric_features_questions_mapping():
         return {
             'female friendly': 'How female friendly should the city be?',
-            'friendly to foreigners': 'How friendly the city for foreigners?',
+            'friendly to foreigners': 'How important is it that the city is friendly to foreigners?',
             'fun': 'How fun should be the city?',
             'happiness': 'Happiness level of the city?',
             'healthcare': 'Healthcare level in the city?',
@@ -106,6 +111,9 @@ class CitiesCollection:
     def get_binary_question(self, feature):
         return self._features_binary_questions_mapping.get(feature)
 
+    def get_image(self, feature):
+        return self.images.get(feature)
+
     def get_range(self, feature):
         return self._features_ranges_mapping.get(feature, (1, 5))
 
@@ -122,3 +130,4 @@ class CitiesCollection:
         self._features_binary_questions_mapping = self._get_binary_features_questions_mapping()
 
         self.data = self._load_table(self.DEFAULT_FP)
+        self.images = self._load_images(self.IMAGES_FP)

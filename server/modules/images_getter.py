@@ -2,6 +2,7 @@ from google_images_search import GoogleImagesSearch
 import pickle
 import os.path
 import random
+import pandas as pd
 
 
 class ImageGetter:
@@ -72,3 +73,25 @@ class ImageGetterCached(ImageGetter):
         urls_lhs = self.get(lhs, key_word)
         urls_rhs = self.get(rhs, key_word)
         return self._get_random(urls_lhs), self._get_random(urls_rhs)
+
+
+class ImageGetterLocal:
+    key_words = ['sightseeing', 'nature', 'dish']
+
+    def __init__(self):
+        self.dfs = {key_word: pd.read_csv('data/{}.csv'.format(key_word)) for key_word in self.key_words}
+        self.cities = {key_word: self.dfs[key_word]['city'].tolist() for key_word in self.key_words}
+
+    def get_random_key_word(self):
+        return random.choice(self.key_words)
+
+    def get_random_url(self, key_word, city):
+        df = self.dfs[key_word]
+        city_data = df[df['city'] == city].iloc[0]
+        return random.sample(city_data['urls'].split(' '), 1)[0]
+
+    def get_random(self):
+        key_word = self.get_random_key_word()
+        city1, city2 = random.sample(self.cities[key_word], 2)
+        url1, url2 = self.get_random_url(key_word, city1), self.get_random_url(key_word, city2)
+        return city1, city2, url1, url2

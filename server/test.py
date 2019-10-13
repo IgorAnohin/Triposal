@@ -1,5 +1,7 @@
-
+import configparser
 from modules.cities_funnel import CitiesFunnel
+from modules.price_finder import PriceFinder
+from modules.images_getter import ImageGetterLocal
 
 
 def test():
@@ -12,4 +14,14 @@ def test():
 
 
 if __name__ == '__main__':
-    test()
+    # test()
+    # CONFIG_FP = 'config.conf'
+    # config = configparser.ConfigParser()
+    # config.read(CONFIG_FP)
+    # price_finder = PriceFinder(config['skyscanner.api']['api_key'])
+    # asd = price_finder.get_price("spain", max_results=1)[0]['MinPrice']
+    # print(asd)
+
+    getter = ImageGetterLocal()
+    result = getter.get_random()
+    print('result', result)
