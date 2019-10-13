@@ -7,6 +7,9 @@ from modules.images_getter import ImageGetterCached, ImageGetterLocal
 from modules.price_finder import PriceFinder
 from modules.cities_funnel import CitiesFunnel
 
+USE_ML = False
+city_question = None
+
 CONFIG_FP = 'config.conf'
 config = configparser.ConfigParser()
 config.read(CONFIG_FP)
@@ -14,7 +17,7 @@ config.read(CONFIG_FP)
 app = Flask(__name__)
 
 img_getter = ImageGetterLocal()
-funnel = CitiesFunnel(img_getter)
+funnel = CitiesFunnel(img_getter, USE_ML)
 price_finder = PriceFinder(config['skyscanner.api']['api_key'])
 
 
@@ -52,7 +55,9 @@ def get_greeting():
 @app.route('/', methods=['GET', 'POST'])
 def main():
     if request.method == 'GET':
-        return jsonify(funnel.get_next_question().to_json())
+        global city_question
+        city_question = funnel.get_next_question()
+        return jsonify(city_question.to_json())
     elif request.method == 'POST':
         import json
         print("request.data", request.data)
@@ -63,11 +68,13 @@ def main():
         if 'city' in d:
             feature = d.get('city')
             score = 1
+            url = city_question.get_url(feature)
         else:
             feature = d.get('question_perk')
             score = int(d.get('value'))
+            url = None
 
-        resulted_cities = funnel.set_rating(feature, score)
+        resulted_cities = funnel.set_rating(feature, score, url)
         json = {'status': 'confirmed'}
         if resulted_cities is not None:
             json['flights'] = merge_with_flights(resulted_cities)

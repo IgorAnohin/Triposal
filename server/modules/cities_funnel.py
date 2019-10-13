@@ -1,7 +1,9 @@
 import random
 from .cities_collection import CitiesCollection
 from .images_getter import ImageGetterCached
+from .labels_predictor import LabelPredictor
 import logging
+import pickle
 import pandas as pd
 
 
@@ -55,6 +57,12 @@ class CityQuestion(object):
         self.city1 = url1
         self.city2 = url2
 
+    def get_url(self, city):
+        if city == self.city1_name:
+            return self.city1
+        else:
+            return self.city2
+
     def to_json(self):
         json = {
             'city1_name': self.city1_name,
@@ -78,10 +86,39 @@ class CitiesFunnel:
         self.current_static_scored_feature_idx = 0
         self.current_static_binary_feature_idx = 0
 
-    def __init__(self, img_getter):
+    def load_ml_model(self):
+        path = 'ml_engine/model.pickle'
+        return pickle.load(open(path, 'rb'))
+
+    def get_target_prediction(self):
+        return self.model.prediction(self.ml_vector) * self.ml_scale
+
+    def cumulate_ml_vector(self, url_img):
+        alpha = 0.8
+        next_vector = self.label_vector.get_from_cache(url_img)
+        self.ml_vector = self.ml_vector * alpha + next_vector * (1. - alpha)
+
+    def get_cities_predictions(self):
+        idx_to_classes = self.model.classes_
+
+        vector = [0] * len(self.cities_set)
+        city_to_idx = {city: idx for idx, city in enumerate(self.cities_set)}
+
+        self.ml_cities_predictions = self.model.predict_proba(pd.DataFrame([self.ml_vector]))[0]
+        for idx, score in enumerate(self.ml_cities_predictions):
+            vector[city_to_idx[idx_to_classes[idx]]] = score
+        self.ml_cities_predictions = vector
+
+    def __init__(self, img_getter, use_ml=False):
         self.cities_collection = CitiesCollection(self._get_available_cities())
         self.img_getter = img_getter
         self.cities_set = set(self.cities_collection.get_cities())
+        self.use_ml = use_ml
+        self.ml_scale = 0.2
+        self.ml_vector = None
+        self.ml_cities_predictions = None
+        self.label_vector = LabelPredictor()
+        self.model = self.load_ml_model() if self.use_ml else None
 
         self.data = None
         self.static_scored_features = None
@@ -126,7 +163,10 @@ class CitiesFunnel:
             return QuestionBinary(self.cities_collection.get_binary_question(feature), feature,
                                   self.cities_collection.get_image(feature))
 
-    def set_rating(self, feature, rating):
+    def set_rating(self, feature, rating, url_img=None):
+        if self.use_ml and feature in self.cities_set and (url_img is not None):
+            self.cumulate_ml_vector(url_img)
+
         city_scale = 0.3
         self.feature_scores[feature] = rating * (city_scale if feature in self.cities_set else 1)
         print('FEATURE SCORES')
@@ -134,9 +174,18 @@ class CitiesFunnel:
         return self._filter_cities(feature)
 
     def compute_scores(self):
+        city_to_idx = {city: idx for idx, city in enumerate(self.cities_set)}
+
+        def compute_ml_factor(city):
+            if self.use_ml:
+                self.get_cities_predictions()
+            vector = [0] * len(self.cities_set)
+            vector[city_to_idx[city]] = 1
+            return (sum([(x - y)**2 for x, y in zip(self.ml_cities_predictions, vector)]))**0.5 * self.ml_scale
+
         def compute_score(row):
             return sum(
-                [abs(val - (0 if key in self.cities_set else row[key])) for key, val in self.feature_scores.items()])
+                [abs(val - (0 if city in self.cities_set else row[city])) + compute_ml_factor(city) for city, val in self.feature_scores.items()])
 
         self.data['score'] = self.data.apply(compute_score, axis=1)
 
