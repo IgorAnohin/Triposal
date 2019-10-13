@@ -1,91 +1,77 @@
-import random
+import configparser
 
 from flask import Flask, jsonify, request
-import configparser
-from modules.cities_collection import CitiesCollection
-from modules.images_getter import ImageGetterCached
+from datetime import datetime
+
+from modules.images_getter import ImageGetterCached, ImageGetterLocal
+from modules.price_finder import PriceFinder
+from modules.cities_funnel import CitiesFunnel
+
+
+CONFIG_FP = 'config.conf'
+config = configparser.ConfigParser()
+config.read(CONFIG_FP)
 
 app = Flask(__name__)
 
-CONFIG_FP = 'config.conf'
+# img_getter = ImageGetterCached(config['google.api']['developer_key'], config['google.api']['cx'])
+img_getter = ImageGetterLocal()
+funnel = CitiesFunnel(img_getter)
+price_finder = PriceFinder(config['skyscanner.api']['api_key'])
 
-questions = [
-    {'question_text': 'How family friendly should the city be?', 'question_perk': 'female_friendly', 'min': 0, 'max': 5},
-    {'question_text': 'How fun should be the city?', 'question_perk': 'fun', 'min': 0, 'max': 5},
-    {'question_text': 'Happiness level of the city?', 'question_perk': 'happiness', 'min': 0, 'max': 5},
-    {'question_text': 'Healthcare level in the city?', 'question_perk': 'healthcare', 'min': 0, 'max': 5},
-    {'question_text': 'Should the city be LGBT friendly?', 'question_perk': 'lgbt_friendly', 'min': 0, 'max': 5},
-    {'question_text': 'Nightlife activity in the city.', 'question_perk': 'nightlife', 'min': 0, 'max': 5},
-    {'question_text': 'How peaceful is the city required to be?', 'question_perk': 'peace', 'min': 0, 'max': 5},
-    {'question_text': 'Tolerance level towards non-local races?', 'question_perk': 'racial_tolerance', 'min': 0, 'max': 5},
-    {'question_text': 'How religious should be the government?', 'question_perk': 'religious_government', 'min': 0, 'max': 5},
-    {'question_text': 'Required safety level?', 'question_perk': 'safety', 'min': 0, 'max': 5},
-    {'question_text': 'How good is the city for developing a startup?', 'question_perk': 'startup_score', 'min': 0, 'max': 5},
-    {'question_text': 'How safe is the traffic?', 'question_perk': 'traffic_safety', 'min': 0, 'max': 5},
-    {'question_text': 'How good is the city for walks?', 'question_perk': 'walkability', 'min': 0, 'max': 5}]
 
-city_perks = {'female_friendly': 0,
-              'fun': 0,
-              'happiness': 0,
-              'healthcare': 0,
-              'lgbt_friendly': 0,
-              'nightlife': 0,
-              'peace': 0,
-              'racial_tolerance': 0,
-              'religious_government': 0,
-              'safety': 0,
-              'startup_score': 0,
-              'traffic_safety': 0,
-              'walkability': 0}
+def choose_greeting():
+    # Where to next?
+    today = datetime.now().strftime("%H:%M")
+    if today >= '05:00' and today < '12:00':
+        return 'Good morning!'
+    elif today >= '12:00' and today < '18:00':
+        return 'Good afternoon!'
+    return 'Good evening!'
+
+
+def merge_with_flights(cities):
+    flights = [price_finder.get_price(city, max_results=1)[0] for city in cities]
+    min_prices = [flight['MinPrice'] for flight in flights]
+    urls = [img_getter.get(city, 'sightseeing', count=1)[0] for city in cities]
+    return [{'city': city, 'min_price': min_price, 'url': url} for (city, min_price, url) in zip(cities, min_prices, urls)]
+
+
+@app.route('/greeting', methods=['GET'])
+def get_greeting():
+    return jsonify({'greeting': choose_greeting()})
 
 
 @app.route('/', methods=['GET', 'POST'])
 def main():
     if request.method == 'GET':
-        rand_val = random.randrange(2)
-        if rand_val == 0:
-            return next_question()
-        else:
-            return next_image()
+        return jsonify(funnel.get_next_question().to_json())
     elif request.method == 'POST':
-        return update_perk(request)
+        if request.args.get('image') == 1:
+            feature = request.args.get('city')
+            score = 1
+        else:
+            feature = request.args.get('question_perk')
+            score = request.args.get('value')
 
-# def next_image():
-#     ImageGetterCached(  get_random_imgs
-
-def remove_question(name):
-    for i in range(len(questions)):
-        if questions[i]['question_perk'] == name:
-            questions.pop(i)
-            break
+        resulted_cities = funnel.set_rating(feature, score)
+        json = {'status': 'confirmed'}
+        if resulted_cities is not None:
+            json['flights'] = merge_with_flights(resulted_cities)
+        return jsonify(json)
 
 
-def update_perk(local_request):
-    perk = local_request.args.get('question_perk')
-    value = local_request.args.get('value')
-    remove_question(perk)
-    city_perks[perk] = value
+@app.route('/reset', methods=['POST'])
+def reset():
+    funnel.reset()
     return jsonify({'status': 'confirmed'})
 
 
-def next_question():
-    return jsonify(random.choice(list(questions)))
-
-
 @app.route('/final', methods=['GET'])
-def temporary():
-    return 'kek'
-
-
-@app.route('/image')
-def test():
-    config = configparser.ConfigParser()
-    config.read(CONFIG_FP)
-
-    img_getter = ImageGetterCached(config['google.api']['developer_key'], config['google.api']['cx'])
-    imgs = img_getter.get("Istanbul")
-    print(imgs)
+def final_result():
+    cities = funnel.find_best(3)
+    return jsonify({'flights': merge_with_flights(cities)})
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
