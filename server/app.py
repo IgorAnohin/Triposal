@@ -8,7 +8,7 @@ from modules.price_finder import PriceFinder
 from modules.cities_funnel import CitiesFunnel, CityQuestion
 
 
-USE_ML = False
+USE_ML = True
 city_question = None
 
 CONFIG_FP = 'config.conf'

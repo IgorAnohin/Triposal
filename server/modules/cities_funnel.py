@@ -96,7 +96,11 @@ class CitiesFunnel:
     def cumulate_ml_vector(self, url_img):
         alpha = 0.8
         next_vector = self.label_vector.get_from_cache(url_img)
-        self.ml_vector = self.ml_vector * alpha + next_vector * (1. - alpha)
+        if self.ml_vector is None:
+            self.ml_vector = next_vector
+        else:
+            self.ml_vector = self.ml_vector * alpha + next_vector * (1. - alpha)
+            self.ml_vector = [max(min(x, 1.0), 0) for x in self.ml_vector]
 
     def get_cities_predictions(self):
         idx_to_classes = self.model.classes_
