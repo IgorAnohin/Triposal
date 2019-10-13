@@ -275,7 +275,7 @@ class _GameState extends State<Game>{
         Padding(
           padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 20.0),
           child: AutoSizeText(
-            "Which view do you prefer?",
+            "Which one do you prefer?",
             style: TextStyle(fontSize: 20),
             maxLines: 2,
           ),
