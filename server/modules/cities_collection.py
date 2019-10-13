@@ -10,17 +10,16 @@ class CitiesCollection:
 
         data['countries_parts'] = data['country'].str.split().str.len()
         data['city'] = data[['place_slug', 'countries_parts']].apply(prettify_place, axis=1)
-        data = data.rename(columns=self._old_new_features_mapping)
-        data = data[self._key_features + self._features]
+        data = data.rename(columns=self._old_new_scored_features_mapping)
+        data = data[self._key_features + self._scored_features]
         return data
 
     def _load_table(self, filepath):
         data = pd.read_csv(filepath)
         return self._preprocess_data(data)
 
-    # should be like this (not parsing) due to some strange column names (not in the list right now)
     @staticmethod
-    def _get_old_new_features_mapping():
+    def _get_old_new_scored_features_mapping():
         return {
             'female_friendly': 'female friendly',
             'friendly_to_foreigners': 'friendly to foreigners',
@@ -36,18 +35,40 @@ class CitiesCollection:
             'safety': 'safety',
             'startup_score': 'startup score',
             'traffic_safety': 'traffic safety',
-            'walkability': 'walkability'
+            'walkability': 'walkability',
+            'internet': 'internet'
         }
 
     @staticmethod
-    def _get_features_questions_mapping():
+    def _get_old_new_binary_features_mapping():
         return {
-            'female friendly': 'How family friendly should the city be?',
+            'cashless_society': 'cashless society',
+            'safe_tap_water': 'safe tap water',
+            'coffee': 'coffee',
+            'coca-cola': 'coca cola',
+            'lgbt_friendly': 'lgbt friendly',
+            'internet': 'internet'
+        }
+
+    @staticmethod
+    def _get_binary_features_questions_mapping():
+        return {
+            'cashless society': 'Does society have to be cashless?',
+            'safe tap water': 'Do you drink water from the tap?',
+            'coffee': 'Do you consume coffee often?',
+            'coca cola': 'Do you consume soda often?',
+            'lgbt friendly': 'Does the city have to be LGBT friendly?',
+            'internet': 'Is the internet speed an important factor for you?'
+        }
+
+    @staticmethod
+    def _get_numeric_features_questions_mapping():
+        return {
+            'female friendly': 'How female friendly should the city be?',
             'friendly to foreigners': 'How friendly the city for foreigners?',
             'fun': 'How fun should be the city?',
             'happiness': 'Happiness level of the city?',
             'healthcare': 'Healthcare level in the city?',
-            'lgbt friendly': 'Should the city be LGBT friendly?',
             'nightlife': 'Nightlife activity in the city.',
             'peace': 'How peaceful is the city required to be?',
             'quality of life': 'How good is the city for life?',
@@ -56,7 +77,7 @@ class CitiesCollection:
             'safety': 'Required safety level?',
             'startup score': 'How good is the city for developing a startup?',
             'traffic safety': 'How safe is the traffic?',
-            'walkability': 'How good is the city for walks?'
+            'walkability': 'How good is the city for walks?',
         }
 
     def get_main_features(self):
@@ -73,21 +94,31 @@ class CitiesCollection:
     def get_countries(self):
         return list(self.data['country'])
 
-    def get_features(self):
-        return self._features
+    def get_binary_features(self):
+        return self._binary_features
 
-    def get_question(self, feature):
-        return self._features_questions_mapping.get(feature)
+    def get_scored_features(self):
+        return self._scored_features
+
+    def get_numeric_question(self, feature):
+        return self._features_numeric_questions_mapping.get(feature)
+
+    def get_binary_question(self, feature):
+        return self._features_binary_questions_mapping.get(feature)
 
     def get_range(self, feature):
         return self._features_ranges_mapping.get(feature, (1, 5))
 
     def __init__(self):
-        self._old_new_features_mapping = self._get_old_new_features_mapping()
-        self._features = list(self._old_new_features_mapping.values())
+        self._old_new_scored_features_mapping = self._get_old_new_scored_features_mapping()
+        self._scored_features = list(self._old_new_scored_features_mapping.values())
+
+        self._old_new_binary_features_mapping = self._get_old_new_binary_features_mapping()
+        self._binary_features = list(self._old_new_binary_features_mapping.values())
 
         self._key_features = self.get_main_features()
         self._features_ranges_mapping = self._get_features_ranges_mapping()
-        self._features_questions_mapping = self._get_features_questions_mapping()
+        self._features_numeric_questions_mapping = self._get_numeric_features_questions_mapping()
+        self._features_binary_questions_mapping = self._get_binary_features_questions_mapping()
 
         self.data = self._load_table(self.DEFAULT_FP)
