@@ -96,7 +96,7 @@ class _FinalState extends State<Final>{
                           minWidth: 100.0,
                           child:RaisedButton(
                             onPressed: null,
-                            child: Text(_dataFlights[index]["min_price"].toString(), style: TextStyle(fontSize: 15)),
+                            child: Text(_dataFlights[index]["min_price"].toString() == "0" ? _dataFlights[index]["min_price"].toString() + "€" : "¯\\_(ツ)_/¯", style: TextStyle(fontSize: 15)),
                             shape: new RoundedRectangleBorder(
                                 borderRadius: new BorderRadius.circular(28.0),
                                 side: BorderSide(color: Colors.white)),
