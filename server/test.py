@@ -49,6 +49,5 @@ def test2():
     print(url)
 
 
-
 if __name__ == '__main__':
     test2()
