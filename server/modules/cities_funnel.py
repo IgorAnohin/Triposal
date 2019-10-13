@@ -129,6 +129,8 @@ class CitiesFunnel:
     def set_rating(self, feature, rating):
         city_scale = 0.3
         self.feature_scores[feature] = rating * (city_scale if feature in self.cities_set else 1)
+        print('FEATURE SCORES')
+        print(self.feature_scores)
         return self._filter_cities(feature)
 
     def compute_scores(self):
@@ -155,7 +157,10 @@ class CitiesFunnel:
                 self.data = new_data
         # it will fail there
         if len(self.data) <= min_valuable_count or (not changed):
-            return self.find_best(min_valuable_count)
+            top_scores = self.find_best(min_valuable_count)
+            print('TOP SCORES')
+            print(top_scores)
+            return top_scores
         return None
 
     def reset(self):

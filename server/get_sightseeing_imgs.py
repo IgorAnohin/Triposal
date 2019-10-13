@@ -17,13 +17,13 @@ def main():
     config = configparser.ConfigParser()
     config.read('config.conf')
 
-    cities = CitiesCollection().get_cities()
+    cities = CitiesCollection(pd.read_csv('data/sightseeing.csv')['city'].tolist()).get_cities()
 
     getter = ImageGetter(config['google.api']['developer_key'], config['google.api']['cx'])
 
     for key_word in ['dish']:  # nature
         rows = read_from_file(key_word)
-        start_idx = len(rows) + 1
+        start_idx = len(rows) + 4
 
         for city in tqdm(cities[start_idx:]):
             time.sleep(1.5)
