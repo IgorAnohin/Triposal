@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import './game.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -7,6 +9,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -44,32 +47,57 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      backgroundColor: Colors.blue,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
               'Good day',
+              style: TextStyle(color: Colors.white, fontSize: 28.0),
+            ),
+            Padding(
+              padding: EdgeInsets.all(14.0),
             ),
             Text(
-              'Are you ready?',
-              style: Theme.of(context).textTheme.display1,
+              'Do you wanna play a game?',
+              style: TextStyle(color: Colors.white, fontSize: 18.0),
             ),
-            MaterialButton(
+            Padding(
+              padding: EdgeInsets.all(8.0),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 30.0, right: 30.0),
+              child: ButtonTheme(
+                minWidth: 250.0,
+                child: RaisedButton(
+                  shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(28.0),
+                      side: BorderSide(color: Colors.green)),
+                  onPressed: () {
+                    print("PICK UP TRIP WAS PUSHED");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Game()),
+                    );
+                  },
+                  color: Colors.green,
+                  textColor: Colors.white,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text("Pick up the trip", style: TextStyle(fontSize: 18)),
+                      Padding(
+                        padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                      ),
+                      Icon(Icons.airplanemode_active, color: Colors.white,)
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         ),
