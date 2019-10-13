@@ -1,5 +1,8 @@
 import random
 from .cities_collection import CitiesCollection
+from .images_getter import ImageGetterCached
+import logging
+import pandas as pd
 
 
 def shuffle_copy(lst):
@@ -41,7 +44,7 @@ class QuestionBinary(object):
             'question_perk': self.question_perk,
             'image': self.image
         }
-        print('JSON\n', json)
+        print(json)
         return json
 
 
@@ -59,11 +62,14 @@ class CityQuestion(object):
             'city1': self.city1,
             'city2': self.city2
         }
-        print('JSON\n', json)
+        print(json)
         return json
 
 
 class CitiesFunnel:
+    def _get_available_cities(self):
+        return pd.read_csv('data/sightseeing.csv')['city'].tolist()
+
     def init(self):
         self.data = self.cities_collection.data.copy()
         self.static_scored_features = shuffle_copy(self.cities_collection.get_scored_features())
@@ -73,7 +79,7 @@ class CitiesFunnel:
         self.current_static_binary_feature_idx = 0
 
     def __init__(self, img_getter):
-        self.cities_collection = CitiesCollection()
+        self.cities_collection = CitiesCollection(self._get_available_cities())
         self.img_getter = img_getter
         self.cities_set = set(self.cities_collection.get_cities())
 
@@ -113,8 +119,7 @@ class CitiesFunnel:
             return QuestionScored(self.cities_collection.get_numeric_question(feature), feature, min_, max_,
                                   self.cities_collection.get_image(feature))
         elif rand_val == 1:
-            city1, city2 = self._get_next_dynamic_feature()
-            url1, url2 = self.img_getter.get_random_imgs(city1, city2)
+            city1, city2, url1, url2 = self._get_next_dynamic_feature()
             return CityQuestion(city1, city2, url1, url2)
         else:
             feature = self._get_next_static_binary_feature()
@@ -135,17 +140,21 @@ class CitiesFunnel:
 
     def find_best(self, count):
         self.compute_scores()
-        return self.data.sort_values(by=['score'])['country'].iloc[:count].values
+        return self.data.sort_values(by=['score'])['city'].iloc[:count].values
 
     def _filter_cities(self, feature):
         d = self.data
         delta = 3
         min_valuable_count = 3
+        changed = False
         if feature not in self.cities_set:
-            self.data = self.data[(d[feature] > self.feature_scores[feature] - delta) & (
+            new_data = self.data[(d[feature] > self.feature_scores[feature] - delta) & (
                     d[feature] < self.feature_scores[feature] + delta)]
+            if len(new_data) > min_valuable_count:
+                changed = True
+                self.data = new_data
         # it will fail there
-        if len(self.data) <= min_valuable_count:
+        if len(self.data) <= min_valuable_count or (not changed):
             return self.find_best(min_valuable_count)
         return None
 

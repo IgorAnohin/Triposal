@@ -16,7 +16,8 @@ class CitiesCollection:
         data['countries_parts'] = data['country'].str.split().str.len()
         data['city'] = data[['place_slug', 'countries_parts']].apply(prettify_place, axis=1)
         data = data.rename(columns=self._old_new_scored_features_mapping)
-        data = data[self._key_features + self._scored_features]
+        data = data.rename(columns=self._old_new_binary_features_mapping)
+        data = data[self._key_features + self._scored_features + self._binary_features]
         return data
 
     def _load_table(self, filepath):
@@ -117,7 +118,7 @@ class CitiesCollection:
     def get_range(self, feature):
         return self._features_ranges_mapping.get(feature, (1, 5))
 
-    def __init__(self):
+    def __init__(self, cities):
         self._old_new_scored_features_mapping = self._get_old_new_scored_features_mapping()
         self._scored_features = list(self._old_new_scored_features_mapping.values())
 
@@ -131,3 +132,4 @@ class CitiesCollection:
 
         self.data = self._load_table(self.DEFAULT_FP)
         self.images = self._load_images(self.IMAGES_FP)
+        self.data = self.data[self.data['city'].isin(cities)]

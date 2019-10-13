@@ -7,14 +7,12 @@ from modules.images_getter import ImageGetterCached, ImageGetterLocal
 from modules.price_finder import PriceFinder
 from modules.cities_funnel import CitiesFunnel
 
-
 CONFIG_FP = 'config.conf'
 config = configparser.ConfigParser()
 config.read(CONFIG_FP)
 
 app = Flask(__name__)
 
-# img_getter = ImageGetterCached(config['google.api']['developer_key'], config['google.api']['cx'])
 img_getter = ImageGetterLocal()
 funnel = CitiesFunnel(img_getter)
 price_finder = PriceFinder(config['skyscanner.api']['api_key'])
@@ -23,18 +21,26 @@ price_finder = PriceFinder(config['skyscanner.api']['api_key'])
 def choose_greeting():
     # Where to next?
     today = datetime.now().strftime("%H:%M")
-    if today >= '05:00' and today < '12:00':
+    if '05:00' <= today < '12:00':
         return 'Good morning!'
-    elif today >= '12:00' and today < '18:00':
+    elif '12:00' <= today < '18:00':
         return 'Good afternoon!'
     return 'Good evening!'
 
 
+def form_web_url():
+    url = 'https://www.skyscanner.es/transport/flights/bcn/{dest_city}/{from_date}/{to_date}/'\
+        .format(dest_city='fran', from_date='191017', to_date='191024')
+    urlWithParams = url + '?adults=1&children=0&adultsv2=1&childrenv2=&infants=0&cabinclass=economy&rtn=1&preferdirects=false&outboundaltsenabled=false&inboundaltsenabled=false&ref=home#/'
+    return urlWithParams
+
+
 def merge_with_flights(cities):
+    print('cities', cities)
     flights = [price_finder.get_price(city, max_results=1)[0] for city in cities]
-    min_prices = [flight['MinPrice'] for flight in flights]
+    min_prices = [flight['MinPrice'] if len(flight) > 0 else 0 for flight in flights]
     booking_urls = [flight['booking_url'] for flight in flights]
-    urls = [img_getter.get(city, 'sightseeing', count=1)[0] for city in cities]
+    urls = [img_getter.get_random_url('sightseeing', city) for city in cities]
     return [{'city': city, 'min_price': min_price, 'url': url, 'booking_url': booking_url} for (city, min_price, url, booking_url) in zip(cities, min_prices, urls, booking_urls)]
 
 
@@ -48,12 +54,18 @@ def main():
     if request.method == 'GET':
         return jsonify(funnel.get_next_question().to_json())
     elif request.method == 'POST':
-        if request.args.get('image') == 1:
-            feature = request.args.get('city')
+        import json
+        print("request.data", request.data)
+        print('request.json', request.json)
+        print("request", request.__dict__)
+
+        d = json.loads(request.data)
+        if 'city' in d:
+            feature = d.get('city')
             score = 1
         else:
-            feature = request.args.get('question_perk')
-            score = request.args.get('value')
+            feature = d.get('question_perk')
+            score = int(d.get('value'))
 
         resulted_cities = funnel.set_rating(feature, score)
         json = {'status': 'confirmed'}

@@ -86,7 +86,10 @@ class ImageGetterLocal:
         return random.choice(self.key_words)
 
     def get_random_url(self, key_word, city):
+        print("CITY", city)
         df = self.dfs[key_word]
+        print('df')
+        print(df[df['city'] == city])
         city_data = df[df['city'] == city].iloc[0]
         return random.sample(city_data['urls'].split(' '), 1)[0]
 
