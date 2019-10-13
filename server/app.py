@@ -5,7 +5,8 @@ from datetime import datetime
 
 from modules.images_getter import ImageGetterCached, ImageGetterLocal
 from modules.price_finder import PriceFinder
-from modules.cities_funnel import CitiesFunnel
+from modules.cities_funnel import CitiesFunnel, CityQuestion
+
 
 USE_ML = False
 city_question = None
@@ -56,8 +57,10 @@ def get_greeting():
 def main():
     if request.method == 'GET':
         global city_question
-        city_question = funnel.get_next_question()
-        return jsonify(city_question.to_json())
+        tmp = funnel.get_next_question()
+        if isinstance(tmp, CityQuestion):
+            city_question = tmp
+        return jsonify(tmp.to_json())
     elif request.method == 'POST':
         import json
         print("request.data", request.data)

@@ -53,7 +53,7 @@ class PriceFinder:
             to_city_data = self.get_place_info(to_city_name.split(" ")[0])
             if not to_city_data or not to_city_data.get("PlaceId", ""):
                 print("ERROR:price_finder:get_price: No city info found")
-                return None
+                return [{'MinPrice': 0, 'booking_url': ''}]
         to_city_id = to_city_data.get("PlaceId")
 
         url = f"https://www.skyscanner.net/g/chiron/api/v1/flights/browse/browsequotes/v1.0/{from_country_id}/EUR/en-US/{from_city_id}/{to_city_id}/{outbound_date}/{inbound_date}"

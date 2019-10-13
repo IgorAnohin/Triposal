@@ -177,10 +177,11 @@ class CitiesFunnel:
         city_to_idx = {city: idx for idx, city in enumerate(self.cities_set)}
 
         def compute_ml_factor(city):
-            if self.use_ml:
-                self.get_cities_predictions()
+            if not self.use_ml:
+                return 0
+            self.get_cities_predictions()
             vector = [0] * len(self.cities_set)
-            vector[city_to_idx[city]] = 1
+            vector[city_to_idx.get(city, 0)] = 1
             return (sum([(x - y)**2 for x, y in zip(self.ml_cities_predictions, vector)]))**0.5 * self.ml_scale
 
         def compute_score(row):
