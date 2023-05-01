@@ -1,6 +1,6 @@
 Google-Images-Search==1.0.1
 configparser==4.0.2
-flask==1.0.2
+flask==2.3.2
 pandas==0.25.1
 numpy==1.22.0
 tqdm==4.36.1
